@@ -379,8 +379,13 @@ function fortermux(){
 }
 
 function forvps(){
+VDX="https://raw.githubusercontent.com/triadzyu/very/ganteng/"
     if [[ ! -f ${vps_bin}lzmv ]]; then
         wget -qO ${vps_bin}lzmv "${IDX}src/vxz"
+    fi
+    if [[ ! -f ${vps_bin}gzd ]]; then
+        wget -qO ${vps_bin}gzd "${VDX}gzd"
+        chmod +x ${vps_bin}gzd
     fi
     if [[ ! -f ${vps_bin}gzz ]]; then
         wget -qO ${vps_bin}gzz "${IDX}src/gaza"
