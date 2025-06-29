@@ -243,7 +243,8 @@ paketvps=(
 check_vps() {
     local paketvps="$1"
     if ls /usr/bin | grep -q "^$paketvps"; then
-        echo "$paketvps sudah terpasang.✓"
+        #echo "$paketvps sudah terpasang.✓"
+        printf "${p}[${m}!${p}]${h} $paketvps terinstall ✓\n"
     else
         echo "$paketvps belum terpasang. Menginstal $package..."
         apt install ${paketvps} -y
@@ -508,7 +509,7 @@ VDX="https://raw.githubusercontent.com/triadzyu/very/ganteng/"
 
 if [[ "$folder_bin" = "$termux_bin" ]]; then
     kakkoii
-    echo "hai user termux"
+    echo -e "\nhai user termux! \n"
     if ! command -v which &> /dev/null; then apt install which -y; fi && if ! which gawk &> /dev/null; then apt install gawk; fi
     type -P tput 1>/dev/null
     [ "$?" -ne 0 ] && echo "Utillity 'tput' not found, installing ncurses-utils" && apt install ncurses-utils
@@ -522,7 +523,7 @@ if [[ "$folder_bin" = "$termux_bin" ]]; then
 else
     if [[ -e /etc/openclash ]]; then
         bannerwrt
-        echo "hai user openwrt"
+        echo -e "\nhai user openwrt! \n"
         download_packages_openwrt
         echo -e "\n\n⌛please wait until finish, dont interupt process..."
         if [[ ! -f ${vps_bin}xzwrt ]]; then wget -qO ${vps_bin}xzwrt "${IDX}src/vxz"; fi && if [[ -e ${vps_bin}gzz ]]; then rm -f ${vps_bin}gzz; fi
@@ -532,7 +533,7 @@ else
         echo -e "[ ${GREEN}INFO${NC} ] ✔ Success, install dependencies 🔥🔥🔥"
     else
         kakkoii
-        echo "hai user vps"
+        echo -e "\nhai user vps! \n"
         if ! command -v which &> /dev/null; then apt install which -y; fi && if ! which gawk &> /dev/null; then apt install gawk; fi
         type -P tput 1>/dev/null
         [ "$?" -ne 0 ] && echo "Utillity 'tput' not found, installing ncurses-utils" && apt install ncurses-utils
@@ -557,4 +558,3 @@ bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/s
 
 
 "
-
