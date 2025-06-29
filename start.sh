@@ -195,7 +195,8 @@ pakettermux=(
 check_termux() {
     local pakettermux="$1"
     if ls /data/data/com.termux/files/usr/bin | grep -q "^$pakettermux"; then
-        echo "$pakettermux sudah terpasang.✓"
+        #echo "$pakettermux sudah terpasang.✓"
+        printf "${p}[${m}!${p}]${h} $pakettermux terinstall ✓\n"
     else
         echo "$pakettermux belum terpasang. Menginstal $pakettermux..."
         apt install ${pakettermux} -y
@@ -203,6 +204,9 @@ check_termux() {
             echo "$pakettermux berhasil diinstal."
         else
             echo "Gagal menginstal $pakettermux."
+            apt-get update -y
+            apt-get upgrade -y
+            apt install ${pakettermux} --fix-missing
         fi
     fi
 }
@@ -213,6 +217,18 @@ download_packages_termux() {
         check_termux "$pkg"
     done
     sleep 1
+}
+
+show_loading() {
+  echo -ne "${ORANGE}Memuat..."
+  local i=0
+  while [ $i -lt 5 ]; do
+    echo -n "."
+    sleep 0.1
+    ((i++))
+  done
+  echo -e "${NC}"
+#clear
 }
 
 #############################################################
@@ -261,15 +277,93 @@ download_packages_vps() {
 trap ctrl_c INT
 #trap ctrl_d EXIT
 
+ctrl_d() {
+    clear
+    if [ -f start.sh ]; then rm -f start.sh; fi
+    echo -e "proses build telah selesai."
+    exit 0
+}
+
 ctrl_c() {
     clear
-    rm -f build.sh
-    echo -e "Penginstallan ip domain checker telah dibatalkan."
+    if [ -f start.sh ]; then rm -f start.sh; fi
+    echo -e "proses build telah dibatalkan."
     exit 1
+}
+
+display_header() {
+#clear
+  echo -e "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          │ MAGELANG ⚡ PHREAKER │                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${CYAN}║${NC} ${MAGENTA}📅 Tanggal: $(date '+%A, %d %B %Y')${NC}                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC} ${MAGENTA}⏰ Waktu: $(date '+%H:%M:%S')${NC}                               ${CYAN}║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
+}
+
+function fortermux1(){
+termux_packages=( "libwebp" "imagemagick" "libarchive" "libandroid-wordexp" "binutils" "coreutils" "ncurses-utils" )
+    for paket in "${termux_packages[@]}"; do
+        apt install "$paket" -y
+    done
 }
 
 echo -e "\n\n${CLWhite} Sedang Menjalankan script.${CLYellow} Mohon Tunggu.."
 echo -e "${CLWhite} Pastikan Koneksi Internet Lancar\n\n"
+
+show_loading
+sleep 1
+
+
+function basic_tools(){
+		if [ -z $(command -v curl) ];then
+		printf "${p}[${m}!${p}]${m}curl belum di install!!\n"
+		printf "${p}[${m}!${p}]${h}pkg install curl\n"
+		printf "${p}[${m}!${p}]${m}Silahkan Install dulu\n"
+		exit
+		else
+		printf "${p}[${m}!${p}]${h} curl terinstall ✓\n"
+		fi
+		
+		if [ -z $(command -v nano) ];then
+		printf "${p}[${m}!${p}]${m}nano belum di install!!\n"
+		printf "${p}[${m}!${p}]${h}pkg install nano\n"
+		printf "${p}[${m}!${p}]${m}Silahkan Install dulu\n"
+		exit
+		else
+		printf "${p}[${m}!${p}]${h} nano terinstall ✓\n"
+		fi
+		
+		if [ -z $(command -v nslookup) ];then
+		printf "${p}[${m}!${p}]${m}nslookup belum di install!!\n"
+		printf "${p}[${m}!${p}]${h}pkg install dnsutils\n"
+		printf "${p}[${m}!${p}]${m}Silahkan Install dulu\n"
+		pkg install dnsutils
+		else
+		printf "${p}[${m}!${p}]${h} nslookup terinstall ✓\n"
+		fi
+}
+
+# ============================================================
+if ! command -v which &> /dev/null; then apt install which -y; fi
+type -P wget 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'wget' not found, installing" && apt install wget -y
+type -P curl 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'curl' not found, installing" && apt install curl -y
+type -P nmap 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'nmap' not found, installing" && apt install nmap -y
+type -P tput 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'tput' not found, installing ncurses-utils" && apt install ncurses-utils
+type -P gpg 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'gpg' not found, installing gnupg" && apt install gnupg -y
+type -P lolcat 1>/dev/null
+[ "$?" -ne 0 ] && echo "Utillity 'lolcat' not found, installing" && apt install ruby -y && gem install lolcat
+# ============================================================
+
+
+
 
 instal_nodejs_termux(){
     echo "Menginstall Node_Modules"
@@ -277,6 +371,7 @@ instal_nodejs_termux(){
     sleep 3
     pkg update && pkg upgrade -y
     pkg install nodejs -y
+    apt install nodejs-lts -y
     node -v
     ln -s ${folder_bin}nodejs ${folder_bin}node
     npm install -g bash-obfuscate
@@ -337,6 +432,8 @@ function dpkg_query(){
         read -p 'Press enter to continue.'
         apt update && apt upgrade -y
         apt install shc
+    #if [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+    #if [ $(dpkg-query -W -f='${Status}' nodejs-lts 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
     elif [ $(dpkg-query -W -f='${Status}' nodejs 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
         echo belum terinstall nodejs, we will aquire them now. This may take a while.
         read -p 'Press enter to continue.'
@@ -415,7 +512,9 @@ if [[ "$folder_bin" = "$termux_bin" ]]; then
     [ "$?" -ne 0 ] && echo "Utillity 'tput' not found, installing ncurses-utils" && apt install ncurses-utils
     dpkg_query
     download_packages_termux
+    
     echo -e "\n\n⌛please wait until finish, dont interupt process..."
+    fortermux1
     fun_bar 'fortermux'
     echo -e "[ ${GREEN}INFO${NC} ] ✔ Success, install dependencies 🔥🔥🔥"
 else
@@ -442,3 +541,18 @@ else
         echo -e "[ ${GREEN}INFO${NC} ] ✔ Success, install dependencies 🔥🔥🔥"
     fi
 fi
+
+show_loading
+display_header
+#bash -c \"$(wget -qO- https://raw.githubusercontent.com/triadzyu/gantengz/master/install.sh)\"
+
+echo -e "
+Silakan ketik command berikut:
+
+bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/gantengz/master/install.sh)\"
+
+bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)\"
+
+
+"
+
