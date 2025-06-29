@@ -244,7 +244,7 @@ check_vps() {
     local paketvps="$1"
     if ls /usr/bin | grep -q "^$paketvps"; then
         #echo "$paketvps sudah terpasang.✓"
-        printf "${p}[${m}!${p}]${h} $paketvps terinstall ✓\n"
+        printf "${p}[${m}!${p}]${CYAN} $paketvps ${GREEN}terinstall ✓${NC}\n"
     else
         echo "$paketvps belum terpasang. Menginstal $package..."
         apt install ${paketvps} -y
@@ -257,7 +257,7 @@ check_vps() {
 }
 
 download_packages_vps() {
-    echo "Update dan instal paket"
+    #echo "Update dan instal paket"
     for pkg in "${paketvps[@]}"; do
         check_vps "$pkg"
     done
