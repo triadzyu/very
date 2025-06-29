@@ -219,17 +219,7 @@ download_packages_termux() {
     sleep 1
 }
 
-show_loading() {
-  echo -ne "${ORANGE}Memuat..."
-  local i=0
-  while [ $i -lt 5 ]; do
-    echo -n "."
-    sleep 0.1
-    ((i++))
-  done
-  echo -e "${NC}"
-#clear
-}
+
 
 #############################################################
 ############ VPS REQUIRED PACKAGE
@@ -308,6 +298,18 @@ termux_packages=( "libwebp" "imagemagick" "libarchive" "libandroid-wordexp" "bin
     for paket in "${termux_packages[@]}"; do
         apt install "$paket" -y
     done
+}
+
+show_loading() {
+  echo -ne "${ORANGE}Memuat..."
+  local i=0
+  while [ $i -lt 5 ]; do
+    echo -n "."
+    sleep 0.1
+    ((i++))
+  done
+  echo -e "${NC}"
+#clear
 }
 
 echo -e "\n\n${CLWhite} Sedang Menjalankan script.${CLYellow} Mohon Tunggu.."
