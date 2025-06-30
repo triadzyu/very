@@ -43,21 +43,35 @@ PROJECT_ENC_DIR="$HOME/enc"
 PROJECT_SUBF_DIR="$HOME/subf"
 PROJECT_SSC_DIR="$HOME/ssc"
 PROJECT_UPX_DIR="$HOME/upx"
+PROJECT_KNOCK_DIR="$HOME/knock"
 
 #git clone https://github.com/Rem01Gaming/ssc
 REPO_ENC="https://github.com/triadzyu/enc.git"
 REPO_SUBF="https://github.com/triadzyu/subf.git"
 REPO_UPX="https://github.com/upx/upx.git"
 REPO_SSC="https://github.com/liberize/ssc.git"
+REPO_KNOCK="https://github.com/guelfoweb/knock.git"
+
+
+if [ ! -d "$PROJECT_KNOCK_DIR" ]; then
+    pip install knock-subdomains
+    git clone "$REPO_KNOCK" "$PROJECT_KNOCK_DIR"
+    cd "$PROJECT_KNOCK_DIR"
+    pip install .
+    #knockpy -d $basedomain --recon --bruteforce
+    cd
+fi
 
 if [ ! -d "$PROJECT_SUBF_DIR" ]; then
     git clone "$REPO_SUBF" "$PROJECT_SUBF_DIR"
     cd "$PROJECT_SUBF_DIR"
     bash build
     cd
-elif [ ! -d "$PROJECT_ENC_DIR" ]; then
+fi
+if [ ! -d "$PROJECT_ENC_DIR" ]; then
     git clone "$REPO_ENC" "$PROJECT_ENC_DIR"
-elif [ ! -d "$PROJECT_SSC_DIR" ]; then
+fi
+if [ ! -d "$PROJECT_SSC_DIR" ]; then
     git clone "$REPO_SSC" "$PROJECT_SSC_DIR"
     apt install binutils
     apt install libarchive-dev
@@ -65,26 +79,31 @@ elif [ ! -d "$PROJECT_SSC_DIR" ]; then
     apt install libz-dev
     apt install git
     apt install perl -y
-elif [ ! -d "$PROJECT_UPX_DIR" ]; then
+fi
+if [ ! -d "$PROJECT_UPX_DIR" ]; then
     git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
     cd "$PROJECT_UPX_DIR"
     git submodule update --init
-    nohup make > make.log 2>&1 &
+    #nohup make > make.log 2>&1 &
     #make
-    echo "print cat make.log"
-    cat make.log
+    #echo "print cat make.log"
+    #cat make.log
     cd
-    cd /root/upx/build/release
+    cd $HOME/upx/build/release
     #make
     nohup make > make2.log 2>&1 &
     echo "print cat make2.log"
     cat make2.log
-    sleep 11
-    
+    for i in $(seq 1 800); do
+        sleep 0.5
+        cat make2.log
+    done
+    #300=5mnt
     chmod 777 upx
     cp -f upx /usr/bin
-    chmod +x /root/upx/build/release/upx
-    cp -f /root/upx/build/release/upx /usr/bin
+    chmod +x $HOME/upx/build/release/upx
+    cp -f $HOME/upx/build/release/upx /usr/bin
+    chmod 777 /usr/bin/upx
     cd
 fi
 
