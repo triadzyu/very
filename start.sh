@@ -75,8 +75,8 @@ if [ ! -d "$PROJECT_SSC_DIR" ]; then
     git clone "$REPO_SSC" "$PROJECT_SSC_DIR"
     apt install binutils
     apt install libarchive-dev
-    apt install acl-dev
-    apt install libz-dev
+    apt install acl-dev -y
+    apt install libz-dev -y
     apt install git
     apt install perl -y
 fi
@@ -84,21 +84,25 @@ if [ ! -d "$PROJECT_UPX_DIR" ]; then
     git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
     cd "$PROJECT_UPX_DIR"
     git submodule update --init
-    #nohup make > make.log 2>&1 &
-    #make
-    #echo "print cat make.log"
-    #cat make.log
+
+    nohup make > make.log 2>&1 &
+
+    for i in $(seq 1 800); do
+        sleep 0.5
+        cat make.log
+    done
+    
     cd
     cd $HOME/upx/build/release
-    #make
+
     nohup make > make2.log 2>&1 &
-    echo "print cat make2.log"
-    cat make2.log
+
     for i in $(seq 1 800); do
         sleep 0.5
         cat make2.log
     done
     #300=5mnt
+
     chmod 777 upx
     cp -f upx /usr/bin
     chmod +x $HOME/upx/build/release/upx
@@ -106,7 +110,40 @@ if [ ! -d "$PROJECT_UPX_DIR" ]; then
     chmod 777 /usr/bin/upx
     cd
 fi
+    if ! command -v upx &> /dev/null; then
+        if [ ! -d "$PROJECT_UPX_DIR" ]; then
+            git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
+        fi
+        
+        cd "$PROJECT_UPX_DIR"
+        git submodule update --init
+        
+        nohup make > make.log 2>&1 &
+        #300=5mnt
+        for i in $(seq 1 800); do
+            sleep 0.5
+            cat make.log
+        done
+    
+        cd
+        cd $HOME/upx/build/release
 
+        nohup make > make2.log 2>&1 &
+
+        for i in $(seq 1 800); do
+            sleep 0.5
+            cat make2.log
+        done
+    
+        chmod 777 upx
+        cp -f upx /usr/bin
+        chmod +x $HOME/upx/build/release/upx
+        cp -f $HOME/upx/build/release/upx /usr/bin
+        chmod 777 /usr/bin/upx
+        cd
+    else
+        printf "${p}[${m}!${p}]${h} upx crypter terinstall ✓\n"
+    fi
 
 function kakkoii(){
 clear
