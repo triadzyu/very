@@ -87,7 +87,7 @@ if [ ! -d "$PROJECT_UPX_DIR" ]; then
 
     nohup make > make.log 2>&1 &
 
-    for i in $(seq 1 800); do
+    for i in $(seq 1 300); do
         sleep 0.5
         cat make.log
     done
@@ -97,7 +97,7 @@ if [ ! -d "$PROJECT_UPX_DIR" ]; then
 
     nohup make > make2.log 2>&1 &
 
-    for i in $(seq 1 800); do
+    for i in $(seq 1 300); do
         sleep 0.5
         cat make2.log
     done
@@ -120,7 +120,7 @@ fi
         
         nohup make > make.log 2>&1 &
         #300=5mnt
-        for i in $(seq 1 800); do
+        for i in $(seq 1 300); do
             sleep 0.5
             cat make.log
         done
@@ -130,7 +130,7 @@ fi
 
         nohup make > make2.log 2>&1 &
 
-        for i in $(seq 1 800); do
+        for i in $(seq 1 300); do
             sleep 0.5
             cat make2.log
         done
