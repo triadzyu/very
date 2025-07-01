@@ -115,6 +115,8 @@ fi
             git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
         fi
         
+        if [ ! -e $HOME/upx/build/release/upx ]; then
+        
         cd "$PROJECT_UPX_DIR"
         git submodule update --init
         
@@ -141,6 +143,17 @@ fi
         cp -f $HOME/upx/build/release/upx /usr/bin
         chmod 777 /usr/bin/upx
         cd
+        
+        else
+        
+        cd $HOME/upx/build/release
+        chmod 777 upx
+        cp -f upx /usr/bin
+        chmod +x $HOME/upx/build/release/upx
+        cp -f $HOME/upx/build/release/upx /usr/bin
+        chmod 777 /usr/bin/upx
+        cd
+        
     else
         printf "${p}[${m}!${p}]${h} upx crypter terinstall ✓\n"
     fi
