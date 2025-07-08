@@ -54,12 +54,30 @@ REPO_KNOCK="https://github.com/guelfoweb/knock.git"
 
 
 if [ ! -d "$PROJECT_KNOCK_DIR" ]; then
-    pip install knock-subdomains
+    #pip install knock-subdomains
     git clone "$REPO_KNOCK" "$PROJECT_KNOCK_DIR"
     cd "$PROJECT_KNOCK_DIR"
     pip install .
     #knockpy -d $basedomain --recon --bruteforce
     cd
+    apt install python3.12-venv
+    python3 -m venv $HOME/knock
+    source $HOME/knock/bin/activate
+    cd $HOME/knock
+    pip install .
+    chmod +x $HOME/knock/bin/knockpy
+    cp -f $HOME/knock/bin/knockpy /usr/bin
+else
+    if [ ! -f "/usr/bin/knockpy" ]; then
+    cd
+    apt install python3.12-venv
+    python3 -m venv $HOME/knock
+    source $HOME/knock/bin/activate
+    chmod +x $HOME/knock/bin/knockpy
+    cp -f $HOME/knock/bin/knockpy /usr/bin
+    else
+    source $HOME/knock/bin/activate
+    fi
 fi
 
 if [ ! -d "$PROJECT_SUBF_DIR" ]; then
@@ -73,283 +91,66 @@ if [ ! -d "$PROJECT_ENC_DIR" ]; then
 fi
 if [ ! -d "$PROJECT_SSC_DIR" ]; then
     git clone "$REPO_SSC" "$PROJECT_SSC_DIR"
-    apt install binutils
-    apt install libarchive-dev
+    apt install binutils -y
+    apt install libarchive-dev -y
     apt install acl-dev -y
     apt install libz-dev -y
     apt install git
     apt install perl -y
+    chmod +x $HOME/ssc/ssc
+    cp -f $HOME/ssc/ssc /usr/bin
 fi
 if [ ! -d "$PROJECT_UPX_DIR" ]; then
+    berikan_izin(){
+        cd $HOME/upx/build/release
+        chmod 777 upx
+        cp -f upx /usr/bin
+        chmod +x $HOME/upx/build/release/upx
+        cp -f $HOME/upx/build/release/upx /usr/bin
+        chmod 777 /usr/bin/upx
+        cd
+    }
     git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
     cd "$PROJECT_UPX_DIR"
     git submodule update --init
-
+    
+    make1(){
+    cd
+    cd "$PROJECT_UPX_DIR"
     nohup make > make.log 2>&1 &
-
+    echo "print cat make.log"
     for i in $(seq 1 300); do
         sleep 0.5
-        cat make.log
+        cat cat make.log
     done
-    
-    cd
+    }
+    make2(){
     cd $HOME/upx/build/release
-
     nohup make > make2.log 2>&1 &
-
+    echo "print cat make2.log"
+    cat make2.log
     for i in $(seq 1 300); do
         sleep 0.5
         cat make2.log
     done
+    }
     #300=5mnt
-
-    chmod 777 upx
-    cp -f upx /usr/bin
-    chmod +x $HOME/upx/build/release/upx
-    cp -f $HOME/upx/build/release/upx /usr/bin
-    chmod 777 /usr/bin/upx
-    cd
+    if [ -f "$HOME/upx/build/release/upx" ]; then
+        berikan_izin
+    else
+        make1
+        make2
+    fi
+else
+    if [ ! -f "/usr/bin/upx" ]; then
+    if [ -f "$HOME/upx/build/release/upx" ]; then
+        berikan_izin
+    else
+        make1
+        make2
+    fi
+    fi
 fi
-    if ! command -v upx &> /dev/null; then
-        if [ ! -d "$PROJECT_UPX_DIR" ]; then
-            git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
-        fi
-        
-        if [ ! -e $HOME/upx/build/release/upx ]; then
-        
-        cd "$PROJECT_UPX_DIR"
-        git submodule update --init
-        
-        nohup make > make.log 2>&1 &
-        #300=5mnt
-        for i in $(seq 1 300); do
-            sleep 0.5
-            cat make.log
-        done
-    
-        cd
-        cd $HOME/upx/build/release
-
-        nohup make > make2.log 2>&1 &
-
-        for i in $(seq 1 300); do
-            sleep 0.5
-            cat make2.log
-        done
-    
-        chmod 777 upx
-        cp -f upx /usr/bin
-        chmod +x $HOME/upx/build/release/upx
-        cp -f $HOME/upx/build/release/upx /usr/bin
-        chmod 777 /usr/bin/upx
-        cd
-        
-        else
-        
-        cd $HOME/upx/build/release
-        chmod 777 upx
-        cp -f upx /usr/bin
-        chmod +x $HOME/upx/build/release/upx
-        cp -f $HOME/upx/build/release/upx /usr/bin
-        chmod 777 /usr/bin/upx
-        cd
-        
-    else
-        printf "${p}[${m}!${p}]${h} upx crypter terinstall ✓\n"
-    fi
-
-function install_tools() {
-#install golang
-
-#HOME="/root"
-#HOME="/usr/local"
-#HOME="/srv/zroot"
-#PREFIX="/usr"
-
-pasang_di_root(){
-    if ! command -v go &> /dev/null; then
-        apt install golang -y
-        mkdir -p /root/go
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /root/go -xzf go1.24.0.linux-amd64.tar.gz
-        #echo 'export PATH="$PATH:/root/go/go/bin"' >> ~/.profile
-        echo 'export PATH="$PATH:/root/go/go/bin"' >> ~/.bashrc
-        echo 'export GOPATH=/root/go' >> ~/.bashrc
-        echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-        source ~/.bashrc
-        /root/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /root/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
-    fi
-    if ! grep -q 'go/bin' "$HOME/.bashrc"; then
-        apt install golang -y
-        mkdir -p /root/go
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /root/go -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/root/go/go/bin"' >> "$HOME/.bashrc"
-        echo 'export GOPATH="/root/go"' >> "$HOME/.bashrc"
-        echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.bashrc"
-        source "$HOME/.bashrc"
-        /root/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /root/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        source "$HOME/.bashrc"
-    fi
-    if ! command -v subfinder &> /dev/null; then
-        /root/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /root/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        mkdir -p $HOME/go
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        mkdir -p $HOME/go
-        $HOME/go/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f $HOME/go/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-}
-pasang_di_local(){
-    if ! command -v go &> /dev/null; then
-        apt install golang -y
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
-        echo 'export GOPATH=/usr/local' >> ~/.bashrc
-        echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-        source ~/.bashrc
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
-    fi
-    if ! grep -q 'go/bin' "$HOME/.bashrc"; then
-        apt install golang -y
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/usr/local/go/bin"' >> "$HOME/.bashrc"
-        echo 'export GOPATH=/usr/local' >> "$HOME/.bashrc"
-        echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.bashrc"
-        source "$HOME/.bashrc"
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        source "$HOME/.bashrc"
-    fi
-    if ! command -v subfinder &> /dev/null; then
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        /usr/local/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f /usr/local/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        mkdir -p $HOME/go
-        /usr/local/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f /usr/local/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-}
-pasang_di_home(){
-#HOME="/srv/zroot"
-    if ! command -v go &> /dev/null; then
-        apt install golang -y
-        mkdir -p /srv/zroot/go
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /srv/zroot/go -xzf go1.24.0.linux-amd64.tar.gz
-        #echo 'export PATH="$PATH:/root/go/go/bin"' >> ~/.profile
-        echo 'export PATH="$PATH:/srv/zroot/go/go/bin"' >> ~/.bashrc
-        echo 'export GOPATH=/srv/zroot/go' >> ~/.bashrc
-        echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-        source ~/.bashrc
-        /srv/zroot/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /srv/zroot/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
-    fi
-    if ! grep -q 'go/bin' "$HOME/.bashrc"; then
-        apt install golang -y
-        mkdir -p /srv/zroot/go
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /srv/zroot/go -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/srv/zroot/go/go/bin"' >> "$HOME/.bashrc"
-        echo 'export GOPATH="/srv/zroot/go"' >> "$HOME/.bashrc"
-        echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.bashrc"
-        source "$HOME/.bashrc"
-        /srv/zroot/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /root/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        source "$HOME/.bashrc"
-    fi
-    if ! command -v subfinder &> /dev/null; then
-        /srv/zroot/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f $HOME/go/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        mkdir -p $HOME/go
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        mkdir -p $HOME/go
-        $HOME/go/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f $HOME/go/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-}
-
-#pasang_di_termux
-#pasang_di_root
-pasang_di_local
-#pasang_di_home
-
-
-
-
-
-    echo -e "${p}"
-}
-#install_tools
 
 
 function kakkoii(){
@@ -770,124 +571,6 @@ VDX="https://raw.githubusercontent.com/triadzyu/very/ganteng/"
     fi
 }
 
-pasang_di_termux() {
-HOME="/data/data/com.termux/files/home"
-PREFIX="/data/data/com.termux/files/usr"
-    if ! command -v go &> /dev/null; then
-        apt install golang -y
-        mkdir -p $HOME/go
-        wget https://go.dev/dl/go1.24.0.linux-armv6l.tar.gz
-        tar -C $HOME/go -xzf go1.24.0.linux-armv6l.tar.gz
-        echo 'export PATH=$PATH:/data/data/com.termux/files/home/go/go/bin' >> ~/.bashrc
-        echo 'export GOPATH=/data/data/com.termux/files/home/go' >> ~/.bashrc
-        echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-        source ~/.bashrc
-        $HOME/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f $HOME/go/bin/subfinder $PREFIX/bin/
-        chmod +x $PREFIX/bin/subfinder
-    else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
-    fi
-    if ! grep -q 'go/bin' "$HOME/.bashrc"; then
-        apt install golang -y
-        mkdir -p $HOME/go
-        wget https://go.dev/dl/go1.24.0.linux-armv6l.tar.gz
-        tar -C $HOME/go -xzf go1.24.0.linux-armv6l.tar.gz
-        echo 'export PATH="$PATH:/data/data/com.termux/files/home/go/go/bin"' >> "$HOME/.bashrc"
-        echo 'export GOPATH=/data/data/com.termux/files/home/go' >> "$HOME/.bashrc"
-        echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.bashrc"
-        source "$HOME/.bashrc"
-        /data/data/com.termux/files/home/go/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /data/data/com.termux/files/home/go/bin/subfinder $PREFIX/bin/
-        chmod +x $PREFIX/bin/subfinder
-    else
-        source "$HOME/.bashrc"
-    fi
-    if ! command -v subfinder &> /dev/null; then
-        go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f $HOME/go/bin/subfinder $PREFIX/bin/
-        chmod +x $PREFIX/bin/subfinder
-    else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        mkdir -p $HOME/go
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        pip install bugscanner multithreading setuptools loguru requests
-        mkdir -p $HOME/go
-        $HOME/go/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f $HOME/go/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-    echo -e "${p}"
-}
-
-pasang_di_local(){
-    if ! command -v go &> /dev/null; then
-        apt install golang -y
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
-        echo 'export GOPATH=/usr/local' >> ~/.bashrc
-        echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-        source ~/.bashrc
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
-    fi
-    if ! grep -q 'go/bin' "$HOME/.bashrc"; then
-        apt install golang -y
-        wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz
-        tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz
-        echo 'export PATH="$PATH:/usr/local/go/bin"' >> "$HOME/.bashrc"
-        echo 'export GOPATH=/usr/local' >> "$HOME/.bashrc"
-        echo 'export PATH=$PATH:$GOPATH/bin' >> "$HOME/.bashrc"
-        source "$HOME/.bashrc"
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        source "$HOME/.bashrc"
-    fi
-    if ! command -v subfinder &> /dev/null; then
-        /usr/local/go/bin/go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        cp -f /usr/local/bin/subfinder /usr/bin/
-        chmod +x /usr/bin/subfinder
-    else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        /usr/local/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f /usr/local/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        mkdir -p $HOME/go
-        /usr/local/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f /usr/local/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-    echo -e "${p}"
-}
-
 if [[ "$folder_bin" = "$termux_bin" ]]; then
     kakkoii
     echo -e "\nhai user termux! \n"
@@ -901,8 +584,6 @@ if [[ "$folder_bin" = "$termux_bin" ]]; then
     fortermux1
     fun_bar 'fortermux'
     echo -e "[ ${GREEN}INFO${NC} ] ✔ Success, install dependencies 🔥🔥🔥"
-    
-    pasang_di_termux
 else
     if [[ -e /etc/openclash ]]; then
         bannerwrt
@@ -925,9 +606,6 @@ else
         echo -e "\n\n⌛please wait until finish, dont interupt process..."
         fun_bar 'forvps'
         echo -e "[ ${GREEN}INFO${NC} ] ✔ Success, install dependencies 🔥🔥🔥"
-        
-        pasang_di_local
-        
     fi
 fi
 
@@ -944,3 +622,5 @@ bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/s
 
 
 "
+
+
