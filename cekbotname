@@ -1,0 +1,29 @@
+#!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+
+function cekinfobot(){
+TOKEN="$1"
+
+RESPONSE=$(curl -s https://api.telegram.org/bot${TOKEN}/getMe)
+
+usernamebot=$(grep -o '"username":"[^"]*' $RESPONSE | grep -o '[^"]*$' | tail -1)
+botfirstname=$(grep -o '"first_name":"[^"]*' $RESPONSE | grep -o '[^"]*$' | tail -1)
+botlastname=$(grep -o '"last_name":"[^"]*' $RESPONSE | grep -o '[^"]*$')
+
+echo ""
+echo -e "[ ${GREEN}INFO${NC} ] ✔ Informasi Bot Telegram"
+echo ""
+echo -e "[ ${GREEN}BOT Username${NC} ] ✔ @${usernamebot} "
+echo -e "[ ${GREEN}BOT Firstname${NC} ] ✔ ${botfirstname} "
+echo -e "[ ${GREEN}BOT Lastname${NC} ] ✔ ${botlastname} "
+echo ""
+
+}
+cekinfobot "$@"
