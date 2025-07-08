@@ -101,7 +101,30 @@ if [ ! -d "$PROJECT_SSC_DIR" ]; then
     cp -f $HOME/ssc/ssc /usr/bin
 fi
 if [ ! -d "$PROJECT_UPX_DIR" ]; then
-    berikan_izin(){
+
+function make1(){
+    cd
+    cd $HOME/upx
+    nohup make -j1 > make.log 2>&1 &
+    echo "print cat make.log"
+    for i in $(seq 1 60); do
+        sleep 0.5
+        cat cat make.log
+    done
+    echo "selesai ✓✓"
+}
+function make2(){
+    cd
+    cd $HOME/upx/build/release
+    nohup make -j1 > make2.log 2>&1 &
+    echo "print cat make2.log"
+    for i in $(seq 1 60); do
+        sleep 0.5
+        cat make2.log
+    done
+    echo "selesai ✓✓"
+}
+function berikan_izin(){
         cd $HOME/upx/build/release
         chmod 777 upx
         cp -f upx /usr/bin
@@ -109,48 +132,40 @@ if [ ! -d "$PROJECT_UPX_DIR" ]; then
         cp -f $HOME/upx/build/release/upx /usr/bin
         chmod 777 /usr/bin/upx
         cd
-    }
-    git clone "$REPO_UPX" "$PROJECT_UPX_DIR"
-    cd "$PROJECT_UPX_DIR"
+}
+if [ ! -d "$HOME/upx" ]; then
+    git clone https://github.com/upx/upx.git
+    cd $HOME/upx
     git submodule update --init
     
-    make1(){
-    cd
-    cd "$PROJECT_UPX_DIR"
-    nohup make > make.log 2>&1 &
-    echo "print cat make.log"
-    for i in $(seq 1 300); do
-        sleep 0.5
-        cat cat make.log
-    done
-    }
-    make2(){
-    cd $HOME/upx/build/release
-    nohup make > make2.log 2>&1 &
-    echo "print cat make2.log"
-    cat make2.log
-    for i in $(seq 1 300); do
-        sleep 0.5
-        cat make2.log
-    done
-    }
-    #300=5mnt
-    if [ -f "$HOME/upx/build/release/upx" ]; then
-        berikan_izin
-    else
+
+    if [ ! -f "$HOME/upx/build/release/upx" ]; then
+        sudo apt update
+        sudo apt install --reinstall coreutils cmake make build-essential
+        sudo apt upgrade
         make1
         make2
+        berikan_izin
+    else
+        berikan_izin
     fi
+
 else
     if [ ! -f "/usr/bin/upx" ]; then
-    if [ -f "$HOME/upx/build/release/upx" ]; then
+      if [ -f "$HOME/upx/build/release/upx" ]; then
         berikan_izin
-    else
+      else
+        sudo apt update
+        sudo apt install --reinstall coreutils cmake make build-essential
+        sudo apt upgrade
         make1
         make2
-    fi
+        berikan_izin
+      fi
     fi
 fi
+
+
 
 
 function kakkoii(){
