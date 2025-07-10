@@ -575,4 +575,41 @@ pasang_di_home(){
         cp -f $HOME/go/bin/subfinder /usr/bin/
         chmod +x /usr/bin/subfinder
     else
-        pr
+        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
+    fi
+    if ! command -v bugscanx-go &> /dev/null; then
+        mkdir -p $HOME/go
+        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
+        chmod +x /usr/bin/bugscanx-go
+    else
+        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
+    fi
+
+    if ! command -v bugscanner-go &> /dev/null; then
+        mkdir -p $HOME/go
+        $HOME/go/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
+        cp -f $HOME/go/bin/bugscanner-go /usr/bin/
+        chmod +x /usr/bin/bugscanner-go
+    else
+        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
+    fi
+}
+
+#pasang_di_termux
+#pasang_di_root
+#pasang_di_local
+#pasang_di_home
+
+
+
+
+
+    echo -e "${p}"
+}
+#install_tools
+
+
+
+
