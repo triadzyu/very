@@ -158,7 +158,7 @@ else
     if [ -f "$HOME/knock/bin/activate" ]; then
         source $HOME/knock/bin/activate
     fi
-    printf "${p}[${m}!${p}]${CYAN}knockpy ${GREEN}terinstall ✓${NC}\n"
+    printf "${p}[${m}!${p}]${CYAN} knockpy ${GREEN}terinstall ✓${NC}\n"
 fi
 }
 
@@ -408,14 +408,77 @@ bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/gantengz/maste
 
 bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)\"
 
+bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/instalupx.sh)\"
+
 
 
 "
 
 #   bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
+#   bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/instalupx.sh)"
 
 }
 mainz
+
+
+instalssc(){
+#https://github.com/Rem01Gaming/ssc.git
+#REPO_SSC="https://github.com/liberize/ssc.git"
+if [ ! -d "$HOME/ssc" ]; then
+    git clone https://github.com/liberize/ssc.git
+    apt install binutils -y
+    apt install libarchive-dev -y
+    apt install acl-dev -y
+    apt install libz-dev -y
+    apt install git
+    apt install perl -y
+    chmod +x $HOME/ssc/ssc
+    cp -f $HOME/ssc/ssc /usr/bin
+    if ls /usr/bin | grep -q "ssc"; then
+        printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
+    fi
+else
+    if [ ! -f "/usr/bin/ssc" ]; then
+        chmod +x $HOME/ssc/ssc
+        cp -f $HOME/ssc/ssc /usr/bin
+    fi
+    printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
+fi
+}
+
+kamunanya(){
+echo -e ""
+echo -e "${p}[${m}!${p}]${m}Upx belum di install!!\n"
+printf "${p}[${m}!${p}]${m}Silahkan Install dulu\n${p}"
+read -p "Apakah Anda yakin ingin install upx update? (Y/N): " update
+echo -e ""
+echo -e ""
+case "$update" in
+y|Y)
+clear
+echo -e "${INFO} Memulai install Upx Ultimate Packer X binary !"
+bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/instalupx.sh)"
+;;
+n|N)
+echo -e "${INFO} Instalasi Upx Dibatalkan!"
+exit 1
+;;
+*)
+echo -e "${EROR} Pilihan tidak valid. Memulai Instalasi Upx Otomatis!"
+echo -e "${INFO} Memulai install Upx Ultimate Packer X binary !"
+bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/instalupx.sh)"
+;;
+esac
+}
+		
+		if [ -z $(command -v upx) ];then
+		kamunanya
+		else
+		#printf "${p}[${m}!${p}]${h} ${CYAN}knockpy ${GREEN}terinstall ✓\n"
+		#bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/instalupx.sh)"
+		printf "${p}[${m}!${p}]${CYAN} Upx Ultimate Packer ${GREEN}terinstall ✓${NC}\n"
+		fi
+		
 
 function install_tools() {
 #install golang
