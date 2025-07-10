@@ -151,7 +151,7 @@ if [ ! -d "$PROJECT_KNOCK_DIR" ]; then
         chmod +x $HOME/knock/bin/knockpy
         cp -f $HOME/knock/bin/knockpy /usr/bin
         if ls /usr/bin | grep -q "knockpy"; then
-            printf "${p}[${m}!${p}]${CYAN}knockpy ${GREEN}terinstall ✓${NC}\n"
+            printf "${p}[${m}!${p}]${CYAN} knockpy ${GREEN}terinstall ✓${NC}\n"
         fi
     fi
 else
@@ -183,7 +183,7 @@ else
         chmod +x $HOME/ssc/ssc
         cp -f $HOME/ssc/ssc /usr/bin
     fi
-    printf "${p}[${m}!${p}]${CYAN} ssc ${GREEN}terinstall ✓${NC}\n"
+    printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
 fi
 }
 
@@ -409,9 +409,10 @@ bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/gantengz/maste
 bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)\"
 
 
+
 "
 
-
+#   bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
 
 }
 mainz
@@ -574,41 +575,4 @@ pasang_di_home(){
         cp -f $HOME/go/bin/subfinder /usr/bin/
         chmod +x /usr/bin/subfinder
     else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
-    fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        mkdir -p $HOME/go
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
-
-    if ! command -v bugscanner-go &> /dev/null; then
-        mkdir -p $HOME/go
-        $HOME/go/go/bin/go install -v github.com/Toton-dhibar/bugscanner-go@latest
-        cp -f $HOME/go/bin/bugscanner-go /usr/bin/
-        chmod +x /usr/bin/bugscanner-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
-    fi
-}
-
-#pasang_di_termux
-#pasang_di_root
-#pasang_di_local
-#pasang_di_home
-
-
-
-
-
-    echo -e "${p}"
-}
-#install_tools
-
-
-
-
+        pr
