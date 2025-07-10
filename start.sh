@@ -176,14 +176,14 @@ if [ ! -d "$HOME/ssc" ]; then
     chmod +x $HOME/ssc/ssc
     cp -f $HOME/ssc/ssc /usr/bin
     if ls /usr/bin | grep -q "ssc"; then
-        printf "${p}[${m}!${p}]${CYAN}ssc ${GREEN}terinstall ✓${NC}\n"
+        printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
     fi
 else
     if [ ! -f "/usr/bin/ssc" ]; then
         chmod +x $HOME/ssc/ssc
         cp -f $HOME/ssc/ssc /usr/bin
     fi
-    printf "${p}[${m}!${p}]${CYAN}ssc ${GREEN}terinstall ✓${NC}\n"
+    printf "${p}[${m}!${p}]${CYAN} ssc ${GREEN}terinstall ✓${NC}\n"
 fi
 }
 
@@ -200,7 +200,7 @@ instalsubfinder(){
         cp -f /usr/local/bin/subfinder /usr/bin/
         chmod +x /usr/bin/subfinder
     else
-        printf "\n${p}[${m}!${p}]${h} golang terinstall ✓\n"
+        printf "\n${p}[${m}!${p}]${CYAN} golang terinstall ✓\n"
     fi
     if ! grep -q 'go/bin' "$HOME/.bashrc"; then
         apt install golang -y
@@ -221,7 +221,7 @@ instalsubfinder(){
         cp -f /usr/local/bin/subfinder /usr/bin/
         chmod +x /usr/bin/subfinder
     else
-        printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
+        printf "${p}[${m}!${p}]${CYAN} subfinder terinstall ✓\n"
     fi
     if ! command -v bugscanx-go &> /dev/null; then
         #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
@@ -229,7 +229,7 @@ instalsubfinder(){
         cp -f /usr/local/bin/bugscanx-go /usr/bin/
         chmod +x /usr/bin/bugscanx-go
     else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
+        printf "${p}[${m}!${p}]${CYAN} bugscanx-go terinstall ✓\n"
     fi
 
     if ! command -v bugscanner-go &> /dev/null; then
@@ -238,7 +238,7 @@ instalsubfinder(){
         cp -f /usr/local/bin/bugscanner-go /usr/bin/
         chmod +x /usr/bin/bugscanner-go
     else
-        printf "${p}[${m}!${p}]${h} bugscanner-go terinstall ✓\n"
+        printf "${p}[${m}!${p}]${CYAN} bugscanner-go terinstall ✓\n"
     fi
 }
 
