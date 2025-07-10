@@ -421,30 +421,6 @@ bash -c \"\$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/i
 mainz
 
 
-instalssc(){
-#https://github.com/Rem01Gaming/ssc.git
-#REPO_SSC="https://github.com/liberize/ssc.git"
-if [ ! -d "$HOME/ssc" ]; then
-    git clone https://github.com/liberize/ssc.git
-    apt install binutils -y
-    apt install libarchive-dev -y
-    apt install acl-dev -y
-    apt install libz-dev -y
-    apt install git
-    apt install perl -y
-    chmod +x $HOME/ssc/ssc
-    cp -f $HOME/ssc/ssc /usr/bin
-    if ls /usr/bin | grep -q "ssc"; then
-        printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
-    fi
-else
-    if [ ! -f "/usr/bin/ssc" ]; then
-        chmod +x $HOME/ssc/ssc
-        cp -f $HOME/ssc/ssc /usr/bin
-    fi
-    printf "${p}[${m}!${p}]${CYAN} ssc Shell Script Compiler ${GREEN}terinstall ✓${NC}\n"
-fi
-}
 
 kamunanya(){
 echo -e ""
