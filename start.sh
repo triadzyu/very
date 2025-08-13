@@ -223,14 +223,14 @@ instalsubfinder(){
     else
         printf "${p}[${m}!${p}]${CYAN} subfinder terinstall ✓\n"
     fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        /usr/local/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f /usr/local/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${CYAN} bugscanx-go terinstall ✓\n"
-    fi
+#    if ! command -v bugscanx-go &> /dev/null; then
+#        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+#        /usr/local/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+# #       cp -f /usr/local/bin/bugscanx-go /usr/bin/
+#        chmod +x /usr/bin/bugscanx-go
+#    else
+#        printf "${p}[${m}!${p}]${CYAN} bugscanx-go terinstall ✓\n"
+#    fi
 
     if ! command -v bugscanner-go &> /dev/null; then
         mkdir -p $HOME/go
@@ -503,15 +503,16 @@ pasang_di_root(){
     else
         printf "${p}[${m}!${p}]${h} subfinder terinstall ✓\n"
     fi
-    if ! command -v bugscanx-go &> /dev/null; then
-        mkdir -p $HOME/go
-        go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        #$HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
-        chmod +x /usr/bin/bugscanx-go
-    else
-        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
-    fi
+	
+#  #  if ! command -v bugscanx-go &> /dev/null; then
+#        mkdir -p $HOME/go
+#        go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+#        #$HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+#        cp -f $HOME/go/bin/bugscanx-go /usr/bin/
+#        chmod +x /usr/bin/bugscanx-go
+#    else
+#        printf "${p}[${m}!${p}]${h} bugscanx-go terinstall ✓\n"
+#    fi
 
     if ! command -v bugscanner-go &> /dev/null; then
         mkdir -p $HOME/go
@@ -649,6 +650,10 @@ pasang_di_home(){
 }
 #install_tools
 
-
+if [[ ! -f $HOME/ssc/.pro ]]; then
+rm -rf $HOME/ssc
+cd
+git clone https://github.com/triadzyu/ssc.git
+fi
 
 
