@@ -505,8 +505,8 @@ pasang_di_root(){
     fi
     if ! command -v bugscanx-go &> /dev/null; then
         mkdir -p $HOME/go
-        #go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
-        $HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+        go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
+        #$HOME/go/go/bin/go install -v github.com/Ayanrajpoot10/bugscanx-go@latest
         cp -f $HOME/go/bin/bugscanx-go /usr/bin/
         chmod +x /usr/bin/bugscanx-go
     else
