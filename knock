@@ -1,0 +1,60 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+token="6654578153:AAEL08DFbdrgtirDqtBU6DkP_acq31uZPik"
+myip=$(curl -s ipv4.icanhazip.com)
+domainz=$(cat /etc/xray/domain)
+
+sendtelegramINT() {
+  local target="$1"
+  curl -s -X POST "https://api.telegram.org/bot6654578153:AAEL08DFbdrgtirDqtBU6DkP_acq31uZPik/sendMessage" -d chat_id="5821340334" -d text="
+SCAN knok INT!
+===============
+target: $target
+thanks for using
+my script
+===============
+Ip $myip
+Domain $domainz"
+}
+
+sendtelegramEXIT() {
+  local target="$1"
+  curl -s -X POST "https://api.telegram.org/bot$token/sendMessage" \
+    --data-urlencode "chat_id=5821340334" \
+    --data-urlencode "text=SCAN knok EXIT!
+===============
+target: $target
+thanks for using
+my script
+===============
+Ip $myip
+Domain $domainz"
+}
+
+# Wrappers for trap (trap gak support argumen langsung)
+trapINT() {
+  sendtelegramINT "$1"
+  exit 130
+}
+trapEXIT() {
+  sendtelegramEXIT "$1"
+}
+
+
+trap 'trapINT "Script interrupted"' INT
+trap 'trapEXIT "Script exited normally"' EXIT
+
+
+
+shadow(){
+local domainn=$1
+#nohup knok "$1" > output_knock.log 2>&1 &
+nohup knok $domainn > output_knock.log 2>&1 &
+for i in $(seq 1 200); do
+  sleep 0.5
+  cat output_knock.log
+done
+}
+shadow "$@"
