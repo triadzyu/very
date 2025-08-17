@@ -1,0 +1,7 @@
+#!/bin/bash
+cek_ssl() {
+local hosts=$1
+nmap -p 443 --script ssl-cert $hosts | grep Subject | awk '{print $4}' | grep 'commonName' | cut -d "=" -f2
+}
+
+cek_ssl "$@"
