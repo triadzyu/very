@@ -12,8 +12,8 @@ sendtelegramINT() {
 SCAN knok INT!
 ===============
 target: $target
-thanks for using
-my script
+Script interrupted
+ctrl c or bad signal
 ===============
 Ip $myip
 Domain $domainz"
@@ -26,8 +26,7 @@ sendtelegramEXIT() {
     --data-urlencode "text=SCAN knok EXIT!
 ===============
 target: $target
-thanks for using
-my script
+Script exited normally
 ===============
 Ip $myip
 Domain $domainz"
@@ -43,8 +42,8 @@ trapEXIT() {
 }
 
 
-trap 'trapINT "Script interrupted"' INT
-trap 'trapEXIT "Script exited normally"' EXIT
+trap 'trapINT "$@"' INT
+trap 'trapEXIT "$@"' EXIT
 
 
 
@@ -58,3 +57,6 @@ for i in $(seq 1 200); do
 done
 }
 shadow "$@"
+
+
+
