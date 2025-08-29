@@ -1,5 +1,18 @@
-TSEL MAXSTREAM
-DIRECT Method
+TSEL MULTIMEDIA
+PAKET NONTON & MAXSTREAM
+
+🔥Metode SSL/TLS - SNI
+
+Bug SNI :
+• assets.nflxext.com
+• help.nflxext.com
+• occ-0-64-58.1.nflxso.net
+• safety-enforcement.tiktok.com
+• api22-normal-c-alisg.tiktokv.com
+
+catatan: jika ada kuota simpati tiktok, maka kuota tersebut yg dipakai terlebih dahulu👌🔥🗿
+
+🔥Metode DIRECT
 
 Payload:
 GET /cdn-cgi/trace HTTP/1.1[crlf]Host: creativeservices.netflix.com[crlf][crlf]CF-RAY / HTTP/1.1[crlf]Host: (host ssh)[crlf]Upgrade: Websocket[crlf]Connection: Keep-Alive[crlf]Upgrade: websocket[crlf][crlf]
