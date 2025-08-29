@@ -1,0 +1,11 @@
+TSEL MAXSTREAM
+DIRECT Method
+
+Payload:
+GET /cdn-cgi/trace HTTP/1.1[crlf]Host: creativeservices.netflix.com[crlf][crlf]CF-RAY / HTTP/1.1[crlf]Host: (host ssh)[crlf]Upgrade: Websocket[crlf]Connection: Keep-Alive[crlf]Upgrade: websocket[crlf][crlf]
+
+HC Format: openconnect.netflix.com:80@user:password
+
+HI Format: bug netflix taro di host ssh
+
+catatan: jika konek trus disconnect ganti ssh aja, minimal premi atau VIP👌🗿
