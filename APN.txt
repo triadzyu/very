@@ -1,0 +1,462 @@
+Harap di gunakan secara bijak !!!
+SEMUA APN ADA DARI ISAT OPOK SAMPAI XL UNLIMITED
+/------------------------------------------------------------------------------------------------ TELKOMSEL
+Setting APN Telkomsel Default
+Name: Telkomsel 4G
+APN: Internet
+Proxy: Kosongkan
+Port: Kosongkan
+Username: Kosongkan
+Password: Kosongkan
+Server: Kosongkan
+MMSC: Kosongkan
+MMS Proxy: Kosongkan
+MMS Port: Kosongkan
+MCC: 510
+MNC: 10
+Authentication Type: Kosongkan
+APN type: default
+APN protocol: IPv4 / IPv6
+APN roaming protocol: IPv4 / IPv6
+Enable/disable APN: APN Enabled
+Bearer: Unspecified
+MVNO type: (biarkan kosong)
+MVNO value: (biarkan kosong)
+ ------------------------------------------------------------------------------------------------
+Setting APN Telkomsel 4G Tercepat
+Name: Telkomsel 4G
+APN: Telkomsel
+Proxy: Biarkan Bawaan
+Port: Biarkan Bawaan
+Username: wap
+Password: wap123AP
+ ------------------------------------------------------------------------------------------------
+Setting APN Telkomsel 4G 
+Name: Telkomsel Stabil
+APN: internet
+Server: (Biarkan bawaan)
+Port: (Default)
+Proxy: (Default)
+Username: wap
+Password: 123wap 
+Port: 80
+Proxy: 203.6.149.156
+Username: (biarkan kosong)
+Password: (biarkan kosong)
+MMS Port: 80
+MMSC: mmsc.mobile.att.net
+MMS Proxy: proxy.mobile.att.net
+ ------------------------------------------------------------------------------------------------
+Setting APN Telkomsel MMS
+Name: Telkomsel MMS
+APN: mms
+Proxy: Not Set
+Port: Not Set
+Username: wap
+Password: wap123
+Server: Not Set
+MMSC: http://mms.telkomsel.com
+MMS Proxy: Not Set
+MMS Port: 8080
+MCC: 510
+MNC: 10
+Authentication Type: PAP
+APN type: mms
+APN protocol: IPv4 / IPv6
+APN roaming protocol : IPv4 / IPv6
+Enable/disable APN: APN Enabled
+Bearer: Unspecified
+MVNO type: None
+MVNO value: Not Set
+  ------------------------------------------------------------------------------------------------
+Setting APN Telkomsel AHA6
+Apn : AHA
+Server: 8.8.8.8
+Port: 80
+Proxy: 10.7.246.194 (atau bisa diganti jadi 54.72.9.71)
+Username: (biarkan kosong)
+Password: (biarkan kosong)
+ ------------------------------------------------------------------------------------------------ Indosat
+    APN name : Indosatgprs
+    username  : dikosongkan
+    password  : dikosongkan.
+ --------------------------------------------------------------------------------------------------
+1. APN Indosat Unlimited
+Nama: Indosat Super Internet Unlimited
+Proxy: 10.19.19.19
+Username: indosat
+Password: indosat
+APN (Access Point Name): Indosatgprs
+Port: 8080
+MMSC: Tidak perlu isi kode ini
+MMS Port: Tidak perlu isi kode ini
+MMS Proxy: Tidak perlu isi kode ini
+Authentication Type: Tidak ada
+APN Protocol: Ipv4
+MC: 510
+MNC: 01
+APN Type: Default, supl
+Server: Tidak perlu isi kode ini
+ ------------------------------------------------------------------------------------------------
+2. APN Indosat Ooredo 4G Terbaru
+Nama: Oreedoo
+Proxy: Tidak perlu isi kode ini
+Username: Tidak perlu isi kode ini
+Password: Tidak perlu isi kode ini
+APN (Access Point Name): indosatooredoo.com
+Port: Tidak perlu isi kode ini
+MMSC: Tidak perlu isi kode ini
+MMS Port: Tidak perlu isi kode ini
+MMS Proxy: Tidak perlu isi kode ini
+Authentication Type: Tidak perlu isi kode ini
+APN Protocol: Ipv4 atau Ipv6
+MC: 510
+MNC: 01
+APN Type: Default, supl
+Server: Tidak perlu isi kode ini
+ ------------------------------------------------------------------------------------------------
+3. APN Indosat Stabil
+Nama: Indosat Stabil
+Proxy: Tidak perlu isi kode ini
+Username: Tidak perlu isi kode ini
+Password: Tidak perlu isi kode ini
+APN (Access Point Name): Internet
+Port: Tidak perlu isi kode ini
+MMSC: Tidak perlu isi kode ini
+MMS Port: Tidak perlu isi kode ini
+MMS Proxy: Tidak perlu isi kode ini
+Authentication Type: Tidak perlu isi kode ini
+APN Protocol: Ipv4
+MC: 510
+MNC: 01
+APN Type: Default, supl
+Server: Tidak perlu isi kode ini
+ ------------------------------------------------------------------------------------------------
+4. APN Default
+Name: ISAT WAP
+APN: indosatgprs
+Username: indosat
+Password: indosat
+Proxy: Tidak perlu isi kode ini
+Port: Tidak perlu isi kode ini
+Server: Tidak perlu isi kode ini
+APN Type: Default dan supl
+APN Protocol: Ipv4/Ipv6
+APN Roaming Protocol: Ipv4/Ipv6
+MMS Proxy: Tidak perlu isi kode ini
+MMS Port: Tidak perlu isi kode ini
+MMSC: Tidak perlu isi kode ini
+MCC: 510
+MNC: 01
+Bearer: unsepecified
+MVNO Type: None
+Authentication Type: Tidak perlu isi kode ini
+ ------------------------------------------------------------------------------------------------
+5. APN Indosat Gaming
+Nama: Indosat Gaming
+Username: indosat
+Password: indosat
+APN (Access Point Name): indosatooredoo.com
+Proxy: Tidak perlu isi kode ini
+Port: Tidak perlu isi kode ini
+MMSC: Tidak perlu isi kode ini
+MMS Port: Tidak perlu isi kode ini
+MMS Proxy: Tidak perlu isi kode ini
+Authentication Type: Tidak perlu isi kode ini
+APN Protocol: Ipv4
+MCC: 510
+MNC: 01
+APN Type: Default dan supl
+Server: 202.155.0.25
+ ------------------------------------------------------------------------------------------------
+1. APN: wap.indosat-m3.net
+Server: kartu.indosat.com
+ ------------------------------------------------------------------------------------------------
+2. APN: 363.net
+Server: 8.8.4.4
+  ------------------------------------------------------------------------------------------------
+3. APN: mms.satelindogprs.com
+Username: satmms
+Password: satmm
+ ------------------------------------------------------------------------------------------------
+4. APN: indosatunlimited/indosatgprs
+Server: indosatm2.com
+ ------------------------------------------------------------------------------------------------
+5. APN: internet.globe.com.ph
+Server: 8.8.8.8 atau google.com
+ -----------------------------------------------------------------------------------------------
+6. APN: vodafone
+Server: wap.vodafone.com
+ ------------------------------------------------------------------------------------------------
+7. APN: internet
+Server: 8.8.8.8
+ ------------------------------------------------------------------------------------------------
+8. APN: indosatooredoo.com
+Username: indosat
+Password: indosatgprs
+Server: 202.155.0.25
+ ------------------------------------------------------------------------------------------------
+Nama : JMBT
+APN : NAN-LTE
+Username : speedtest@durasi
+Password : speedtest@durasi
+Server : wap1.indosatm2.net
+Jenis : pap or chap
+ ------------------------------------------------------------------------------------------------
+Nama : Bebas
+APN :? ltegprs
+Username : bjorkanm
+Password : admin
+ ------------------------------------------------------------------------------------------------
+Nama : sabartbs5
+APN :? sabartbs5
+Proksi : 202.152.57.171
+Port : 80
+Username : indosat@durasi
+Password : Indosat@durasi
+Jenis Autentikasi : PAP atau CHAP
+Jenis APN : default,supl
+Protokol APN : IPV4
+Protokol Roaming APN : IPV4
+ ------------------------------------------------------------------------------------------------ SMARTFREN
+Nama APN: Smartfren4G
+APN: Smartfren4G
+Nama Pengguna: Smartfren
+Sandi: Smartfren
+Jenis autentikasi: PAP atau CHAP
+Jenis APN: default,supl,xcap
+Protokol APN: IPv4/IPv6
+Protokol roaming APN: IPv4/IPv6
+MVNO: Default
+------------------------------------------------------------------------------------------------
+Nama APN: Unlimited4G
+APN: lte.lycamobile.internet
+Nama Pengguna: e-ideas4g
+Kata sandi: mobile4g
+Server: 63.99.231.135
+Proxy: 212.252.169.217
+MMSC: http://lte.mobac.singtel.net/mmsc
+MNC: 09
+Port MMS: 443
+Jenis autentikasi: PAP atau CHAP
+Jenis APN: Default, mms, supl, wap, net
+Protokol APN: IPv4
+------------------------------------------------------------------------------------------------
+Nama APN: Smartfren 4G LTE
+APN: extice.co.id
+Nama Pengguna: Smartfren
+Kata sandi: Smartfren
+Server: -
+Proxy: -
+Proxy MMS: -
+Port MMS: -
+MCC: 510
+MNC: 09
+Operator: Default
+Protokol APN: IPv4/IPv6
+Protokol roaming APN: IPv4/IPv6
+Jenis autentikasi: PAP atau CHAP
+Jenis APN: default,supl,xcap
+Jenis MVNO: Default
+------------------------------------------------------------------------------------------------
+Nama APN: Smartfren 4G
+APN: Smartfren4g
+Proxy: -
+Proxy MMS: 10.17.27.250
+Port MMS: 8080
+Port: 80
+Nama Pengguna: m8@mobi-sehat
+Kata sandi: m8
+Server: -
+Protokol APN: IPv4
+Protokol roaming APN: IPv4
+MMSC: 10.17.27.250
+MCC: 510
+MNC: 28
+Operator: Default
+Jenis autentikasi: PAP atau CHAP
+Jenis APN: default,supl,xcap
+Jenis MVNO: Default
+------------------------------------------------------------------------------------------------
+Nama APN: Online
+APN: instantces.stw.cloud
+Proxy MMS: 51.15.250.93
+Port: 80
+Nama Pengguna: -
+Kata sandi: -
+Server: -
+Protokol APN: IPv4
+MMSC: https://mmsc.cloud.id
+MNC: 11
+Jenis autentikasi: PAP atau CHAP
+Jenis APN: default,supl,net
+------------------------------------------------------------------------------------------------ Tri
+APN Tri 4G Cepat dan Stabil
+Nama: Hutchison
+APN: Hutchison
+Username: 3gprs
+Password: 3gprs
+Authentication type: Pap Or Chap
+APN type: default, supl
+APN protocol: Ipv4
+------------------------------------------------------------------------------------------------
+APN 3 4G Unlimited Bebas Kuota
+Nama: Unlimited
+APN: Unlimited
+Username: 3gprs
+Password: 3gprs
+Authentication type: Pap Or Chap
+APN type: default, supl
+APN protocol: Ipv4
+------------------------------------------------------------------------------------------------
+Nama: Free
+APN: Free
+Username: 3gprs
+Password: 3gprs
+Authentication type: Pap Or Chap
+APN type: default, supl
+APN protocol: Ipv4
+------------------------------------------------------------------------------------------------
+Nama: Tri
+APN: tri.co.id
+Username: 3gprs
+Password: 3gprs
+Authentication type: Pap Or Chap
+APN type: default, supl
+------------------------------------------------------------------------------------------------
+Nama: APN 3
+APN: redir.tri.co.id
+Username: 3gprs
+Password: 3gprs
+Authentication type: Pap Or Chap
+APN type: default, supl
+APN protocol: Ipv4
+------------------------------------------------------------------------------------------------BYU
+Nama APN: by.U Ping Stabil
+Alamat APN: wap.tim.it
+Username: WAPTIM
+Password: WAPTIM
+Server: 180.42.84.217
+Alamat Proxy MMS: 104.148.36.10
+Alamat Port MMS: 80
+Jenis otentikasi: PAP atau CHAP
+Jenis APN: default , supl
+Protokol APN: IPv4
+Protokol roaming APN: IPv4
+------------------------------------------------------------------------------------------------
+Nama APN: Game MLBB
+Username APN: KPN4G.nl
+Alamat Server: 185.168.195.234
+MMSC: http://mp.mobile.kpn/mmsc
+Alamat Proxy MMS: 51.91.157.66
+Alamat Port MMS: 80
+Jenis otentikasi: PAP atau CHAP
+Jenis APN: default,mms,supl
+Protokol APN: IPv4
+Protokol roaming APN: IPv4
+Nama APN: APN Gaming
+Nama Pengguna: wap@wap
+Password: wap125
+Alamat Server: 77.37.140.166
+Alamat Proxy MMS: 45.143.93.179
+Port MMS: 80
+Jenis otentikasi: PAP atau CHAP
+Jenis APN: default,mms,supl
+Protokol APN: IPv4
+Protokol roaming APN: IPv4
+------------------------------------------------------------------------------------------------
+Nama Jaringan: APN 4G Tercepat
+Nama APN: payandgo.o2.co.uk
+Username: payandgo
+Password: password
+Alamat Server: 216.146.35.35
+MMSC: http://mmsc.mms.o2.co.uk:8002
+Alamat Proxy MMS: 140.82.1.202
+Alamat Port MMS: 80
+Jenis otentikasi: PAP atau CHAP
+Jenis APN: default,mms,supl
+Protokol APN: IPv4
+Protokol roaming APN: IPv4
+------------------------------------------------------------------------------------------------
+Nama APN: APN 4G Unlimited
+Username APN: vivnetcom
+Alamat Server: 11.10.5.1
+Jenis otentikasi: PAP
+Jenis APN: default,supl
+Protokol APN: IPv4
+Protokol roaming APN: IPv4 / IPv6
+------------------------------------------------------------------------------------------------ AXIS
+Nama: Axis 3G
+APN: axis3g
+Type Authentication: PAP atau CHAP
+Type APN: default,supl
+------------------------------------------------------------------------------------------------
+Nama: Axis 4G
+APN: axisunlimited
+Server: 1.1.1.1
+Type Authentication: PAP atau CHAP
+Type APN: default,supl,wap
+------------------------------------------------------------------------------------------------
+Nama: Axis Terbaru 4G
+APN: data.mymeteor.ie
+Server: 161.97.150.198
+Type Authentication: PAP atau CHAP
+Type APN: default,supl,wap
+------------------------------------------------------------------------------------------------
+Nama: Axis Full Speed
+APN: internet.telecable.es
+Server: 91.239.100.100
+Type Authentication: PAP atau CHAP
+Type APN: default,mms
+------------------------------------------------------------------------------------------------
+Nama: Axis 4G Full Speed
+APN: Telcel.com
+Server: 8.208.2.65
+Type Authentication: PAP atau CHAP
+Type APN: default,mms,supl
+------------------------------------------------------------------------------------------------
+Nama: Axis Bronet 4G+
+APN: sp.mts
+Server: 93.95.230.101
+Type Authentication: PAP atau CHAP
+Type APN: default,mms,supl
+------------------------------------------------------------------------------------------------ XL AXIATA
+Nama: XL GPRS
+APN: internet
+Proxy, Port, Username, Password, Server, MMSC, Proxy MMS, Port MMS: Tidak diatur
+MCC: 510
+MNC: 11
+Tipe Otentikasi: PAP
+Tipe APN: default, supl
+Protokol APN: IPv4
+Protokol Roaming APN: IPv4
+Aktifkan/Nonaktifkan APN: Nonaktif
+------------------------------------------------------------------------------------------------
+Nama: XL 3G
+APN: xlunlimited
+Proxy: 202.152.240.50
+Port: 8080
+Server: 8.8.8.8
+------------------------------------------------------------------------------------------------
+Nama: XL 4G
+APN: www.xl4g.net
+Proxy: 202.152.240.50
+Port: 80
+------------------------------------------------------------------------------------------------
+Nama: XL Unlimited
+APN: wap1.xl.co.id
+Proxy: 202.153.129.73
+Port: 80
+Server: 8.8.8.8
+------------------------------------------------------------------------------------------------
+Nama: XL 4G Net
+APN: www.xl4g.net
+Proxy: 202.152.240.50
+Port: 80
+------------------------------------------------------------------------------------------------
+Nama: XL MMS
+APN: mms
+MMSC: http://mms.xl.net.id/servlets/mms
+Proxy MMS: 202.152.240.50
+Port MMS: 8080
+
