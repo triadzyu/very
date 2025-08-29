@@ -1,0 +1,50 @@
+━━━━━━━━━━━━━━━━━━━
+XL & AXIS Vidio 📚
+━━━━━━━━━━━━━━━━━━━ 
+Payload :
+◇━━━━━━━━━━━━━◇
+GET / HTTP/1.1
+Host: [host]
+Connection: Upgrade
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇
+PACTH / HTTP/1.1
+Host: [host]
+Host: [rotate=quiz.vidio.com;img.email1.vidio.com]
+Connection: Upgrade
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇
+
+proxy :
+mode salto/ws/websocket/nontls
+◇━━━━━━━━━━━━━◇
+img.email1.vidio.com ✅
+104.17.155.243
+104.17.156.243
+104.17.157.243
+104.17.158.243
+104.17.159.243
+◇━━━━━━━━━━━━━◇
+quiz.vidio.com ✅
+172.67.5.14
+104.22.5.240
+104.22.4.240
+◇━━━━━━━━━━━━━◇
+quiz.int.vidio.com ✅
+◇━━━━━━━━━━━━━◇
+go.appannie.com ✅
+104.17.70.206
+104.17.74.206
+104.17.72.206
+104.17.73.206
+104.17.71.206
+━━━━━━━━━━━━━━━━━━━
+                  
+mode sni/ssl/tls
+- SSL -
+sb.scorecardresearch.com
+static-quiz.prod.vidiocdn.com
