@@ -1,0 +1,36 @@
+━━━━━━━━━━━━━━━━━━━ 
+Extra Combo VIP (XCV)
+━━━━━━━━━━━━━━━━━━━ 
+
+Payload:
+PACTH / HTTP/1.1
+Host: [host]
+Connection: Upgrade
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+
+Proxy :
+Zoomcares.zoom.us
+170.114.52.63
+━━━━━━━━━━━━━━━━━━━
+bot.zoom.us
+170.114.52.123
+━━━━━━━━━━━━━━━━━━━ 
+support.zoom.us
+170.114.45.6
+━━━━━━━━━━━━━━━━━━━
+170-114-12-130.zoom.us
+━━━━━━━━━━━━━━━━━━━
+api.midtrans.com
+104.17.3.81 (old)
+104.17.2.81
+172.67.74.70 
+104.26.15.196
+104.26.14.196
+
+
+- WILDCARD -
+Address : bot.zoom.us
+Host : bot.zoom.us.yourhost.xyz
+SNI : bot.zoom.us.yourhost.xyz
