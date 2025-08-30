@@ -1,7 +1,8 @@
 ━━━━━━━━━━━━━━━━━━━
 XL & AXIS Vidio 📚
 ━━━━━━━━━━━━━━━━━━━ 
-Payload :
+
+📌 Payload :
 ◇━━━━━━━━━━━━━◇
 GET / HTTP/1.1
 Host: [host]
@@ -19,8 +20,12 @@ Upgrade: websocket
 [crlf]
 ◇━━━━━━━━━━━━━◇
 
-proxy :
+
+📌 proxy :
+━━━━━━━━━━━━━━━━━━━
 mode salto/ws/websocket/nontls
+
+⚡mode ws/ntls
 ◇━━━━━━━━━━━━━◇
 img.email1.vidio.com ✅
 104.17.155.243
@@ -30,11 +35,18 @@ img.email1.vidio.com ✅
 104.17.159.243
 ◇━━━━━━━━━━━━━◇
 quiz.vidio.com ✅
-172.67.5.14
-104.22.5.240
-104.22.4.240
+172.66.144.39
+104.20.46.147
 ◇━━━━━━━━━━━━━◇
 quiz.int.vidio.com ✅
+172.66.144.39
+104.20.46.147
+172.66.144.39
+104.20.46.147
+◇━━━━━━━━━━━━━◇
+quiz.staging.vidio.com
+104.20.9.155
+104.20.10.155
 ◇━━━━━━━━━━━━━◇
 go.appannie.com ✅
 104.17.70.206
@@ -42,9 +54,17 @@ go.appannie.com ✅
 104.17.72.206
 104.17.73.206
 104.17.71.206
+
+Ip WS lawas:
+• 104.22.4.240
+• 104.22.5.240
+• 172.67.5.14
+
+⚡ mode sni/ssl/tls
+
+Domain SSL / SNI:
+• sb.scorecardresearch.com
+• static-web.prod.vidiocdn.com
+• static-quiz.prod.vidiocdn.com
+
 ━━━━━━━━━━━━━━━━━━━
-                  
-mode sni/ssl/tls
-- SSL -
-sb.scorecardresearch.com
-static-quiz.prod.vidiocdn.com
