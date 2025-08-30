@@ -1,0 +1,155 @@
+◇━━━━━━━━━━━━━◇ 
+Telkomsel Opok 📕
+◇━━━━━━━━━━━━━◇
+
+opok = 0 pulsa 0 kuota (nol pulsa nol kuota)
+
+📌- CLOUDFLARE -
+WEBSOCKET
+
+Payload :
+GET /cdn-cgi/trace HTTP/1.1
+Host: [rotate=cdn.covid19.go.id;cf.shopee.co.id;app.gopay.co.id;langitmusik.co.id]
+Expect: 100-continue
+[split]
+JEM-BUT / HTTP/1.1
+Host: [host_port]
+Connection: Upgrade
+Upgrade: Websocket
+[crlf]
+
+Proxy :
+cdn.covid19.go.id ✅
+104.21.56.10
+172.67.175.171
+( Beberapa Tkp saja )
+◇━━━━━━━━━━━━━◇ 
+cf.shopee.co.id ✅
+104.18.62.203
+104.18.56.56
+◇━━━━━━━━━━━━━◇
+app.gopay.co.id ✅
+172.66.0.156
+162.159.140.158
+◇━━━━━━━━━━━━━
+Tunggu 2×-4x gagal
+
+
+📌- CLOUDFRONT -
+Tdwcontent.telkomsel.com
+13.33.88.77
+108.138.141.79
+Kesehatan.Kontan.co.id
+18.154.7.104
+Ibj.zenius.net
+18.64.37.63
+s3.digipos-prod.telkomsel.com
+18.67.175.27
+13.33.88.77
+◇━━━━━━━━━━━━━◇
+
+📌- Direct -
+worryfree = fitur jaga pulsa wajib off
+
+GET /worryfree [protocol]\r
+Host: tsel.me\r
+Upgrade: websocket\r
+Connection: keep-alive\r
+Proxy-Connection: keep-alive\r
+\r\n
+◇━━━━━━━━━━━━━◇  
+GET http://tsel.me/worryfree HTTP/1.1
+Host: tsel.me
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET http://tsel.me/worryfree/ssh HTTP/1.1
+Host: tsel.me
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET /worryfree/ssh HTTP/1.1
+Host: tsel.me
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET /worryfree HTTP/1.1
+Host: tsel.me
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET /cdn-cgi/trace HTTP/1.1
+Host: tsel.me/worryfree
+
+CDN-CGI / HTTP/1.1
+Host: [host]
+Upgrade: Websocket
+Connection: Keep-Alive
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET /cdn-cgi/trace HTTP/1.1
+Host:  dashboard.skul.id
+CF-CDN / HTTP/1.1
+Host: [host]
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+◇━━━━━━━━━━━━━◇  
+GET /cdn-cgi/trace HTTP/1.1
+Host: embed.tawk.to
+
+CF-ASU / HTTP/1.1
+Host: [host]
+Upgrade: Websocket
+Connection: Keep-Alive
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+➠ 𝙿𝚛𝚘𝚡𝚢  : api.ovo.id:80
+[✓] Proxy ➡️ 172.67.38.66:80
+Tawk.to:80 NTLS
+104.22.24.131
+104.22.24.131
+172.67.38.66
+◇━━━━━━━━━━━━━◇  
+GET /cdn-cgi/trace HTTP/1.1
+Host: cf.shopee.co.id
+
+CF-ASU / HTTP/1.1
+Host: [host]
+Upgrade: Websocket
+Connection: Keep-Alive
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+[✓] Proxy ➡️ cf.shopee.co.id:80
+◇━━━━━━━━━━━━━◇  
+
+HEAD /worryfree/ HTTP/1.1
+Host: api.midtrans.com
+
+MEM-MEK / HTTP/1.0
+Host: [host]
+User-Agent: [ua]
+Upgrade: Websocket
+[crlf]
+━━━━━━━━━━━━━━━━━━━
+[❂] 𝗣𝗿𝗼𝘅𝘆: api.midtrans.com:80
+[❂] 𝗣𝗿𝗼𝘅𝘆: 104.17.3.81:80
+
+kesamaan pola pada path:
+
+myorbit.id/kuota-habis
+tsel.me/worryfree
+
+Method lain :
+UDP
+Slowdns
+
+Noted :
+Limit +- 200 MB/day
