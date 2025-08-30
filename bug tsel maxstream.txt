@@ -1,6 +1,26 @@
 TSEL MULTIMEDIA
 PAKET NONTON & MAXSTREAM
+◇━━MAXSTREAM━━◇
 
+port 80
+🔥Metode ws/ntls - proxy websocket
+
+Payload =
+GET / HTTP/1.1
+Host: [host]
+Connection: Upgrade
+User-Agent: [ua]
+Upgrade: websocket
+[crlf]
+
+Proxy = 
+104.16.51.111
+172.67.5.14
+104.22.4.240
+104.16.231.163
+
+
+port 443
 🔥Metode SSL/TLS - SNI
 
 Bug SNI :
@@ -12,6 +32,8 @@ Bug SNI :
 
 catatan: jika ada kuota simpati tiktok, maka kuota tersebut yg dipakai terlebih dahulu👌🔥🗿
 
+
+port 143
 🔥Metode DIRECT
 
 Payload:
