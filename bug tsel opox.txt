@@ -32,16 +32,43 @@ app.gopay.co.id ✅
 172.66.0.156
 162.159.140.158
 ◇━━━━━━━━━━━━━
+
+tawk.to
+104.22.25.131
+
+claro-wsnet.online
+104.16.85.20
+
+172.67.38.66
+
+Api.midtrans.com
+104.17.2.81
+
+Loop.co.id
+107.17.79.107
+
+Corona.jakarta.go.id
+
+WS :
+skul.id
+loop.co.id
+va.tawk.to
+
+Ip : 
+104.22.25.131
+104.17.78.107
+172.67.38.66
+
 Tunggu 2×-4x gagal
 
 
 📌- CLOUDFRONT -
-Tdwcontent.telkomsel.com
+tdwcontent.telkomsel.com
 13.33.88.77
 108.138.141.79
-Kesehatan.Kontan.co.id
+kesehatan.kontan.co.id
 18.154.7.104
-Ibj.zenius.net
+ibj.zenius.net
 18.64.37.63
 s3.digipos-prod.telkomsel.com
 18.67.175.27
@@ -51,6 +78,25 @@ s3.digipos-prod.telkomsel.com
 📌- Direct -
 worryfree = fitur jaga pulsa wajib off
 
+◇━━━━━━━━━━━━━◇  
+
+CONNECT / HTTP/1.1
+Host: va.tawk.to
+
+
+YADDY / HTTP/1.1
+Host: dashboard.skul.id
+
+
+YADDY-KAKKOII / HTTP/1.1
+Host: [host]
+Upgrade: Websocket
+YADDY TAMPAN://tsel.me/worryfree
+\r\n
+
+opox.yaddykakkoii.my.id:80
+
+◇━━━━━━━━━━━━━◇  
 GET /worryfree [protocol]\r
 Host: tsel.me\r
 Upgrade: websocket\r
