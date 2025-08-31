@@ -11,7 +11,7 @@ Upgrade: websocket
 [crlf]
 
 Proxy :
-Zoomcares.zoom.us
+zoomcares.zoom.us
 170.114.52.63
 ━━━━━━━━━━━━━━━━━━━
 bot.zoom.us
@@ -23,7 +23,7 @@ support.zoom.us
 170-114-12-130.zoom.us
 ━━━━━━━━━━━━━━━━━━━
 api.midtrans.com
-104.17.3.81 (old)
+104.17.3.81
 104.17.2.81
 172.67.74.70 
 104.26.15.196
@@ -33,4 +33,116 @@ api.midtrans.com
 - WILDCARD -
 Address : bot.zoom.us
 Host : bot.zoom.us.yourhost.xyz
-SNI : bot.zoom.us.yourhost.xyz
+SNI : bot.zoom.us.triadz.web.id
+zoomgov.triadz.web.id
+
+
+📌 XCVIP DOUBLE YOUTUBE / XCP 10GB
+
+
+proxies:
+
+# config yaml wildcard jawa barat
+
+##### VLESS GRPC XCVIP WILDCARD
+- name: vl-443⚡xcv jabar
+  type: vless
+  server: support.zoom.us
+  port: 443
+  uuid: uuid-kamu-disini
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: true
+  skip-cert-verify: false
+  servername: zoomgov.triadz.web.id
+  network: ws
+  ws-opts:
+    path: /vless
+    headers:
+      Host: jabar.triadz.web.id
+
+##### TROJAN WS XCVIP WILDCARD
+- name: tj-443⚡xcv jabar
+  type: trojan
+  server: support.zoom.us
+  port: 443
+  password: password-kamu-disini
+  udp: true
+  skip-cert-verify: true
+  network: ws
+  sni: zoomgov.triadz.web.id
+  network: ws
+  ws-opts:
+    path: /trojan
+    headers:
+      Host: jabar.triadz.web.id
+
+# config yaml wildcard all tkp
+
+##### VLESS WS XCVIP WILDCARD
+- name: vl-443🌀xcv
+  type: vless
+  server: support.zoom.us
+  port: 443
+  uuid: uuid-kamu-disini
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: true
+  skip-cert-verify: true
+  servername: support.zoom.us.xcv.triadz.web.id
+  network: ws
+  ws-opts:
+    path: /vless
+    headers:
+      Host: support.zoom.us.xcv.triadz.web.id
+
+
+# config yaml jawa tengah
+
+##### VLESS WS XCVIP WILDCARD
+- name: vm-80🔥xcv jateng
+  type: vmess
+  server: 104.17.3.81
+  port: 80
+  uuid: uuid-kamu-disini
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: false
+  skip-cert-verify: true
+  servername: jateng.triadz.web.id
+  network: ws
+  ws-opts:
+    path: /vmess
+    headers:
+      Host: jateng.triadz.web.id
+
+##### VLESS GRPC XCVIP WILDCARD
+- name: vl-GRPC🌀xcv
+  server: support.zoom.us
+  port: 443
+  type: vless
+  uuid: 1d1c1d94-6987-4658-a4dc-8821a30fe7e0
+  alterId: 0
+  cipher: auto
+  network: grpc
+  tls: true
+  servername: support.zoom.us.jabar.triadz.web.id
+  skip-cert-verify: true
+  grpc-opts:
+    grpc-service-name: vless-grpc
+
+##### TROJAN GRPC XCVIP WILDCARD
+- name: tj-GRPC⚡xcv jateng
+  type: trojan
+  server: support.zoom.us
+  port: 443
+  password: password-kamu-disini
+  udp: true
+  sni: support.zoom.us.jabar.triadz.web.id
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
