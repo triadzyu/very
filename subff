@@ -1,0 +1,108 @@
+#!/bin/bash
+clear
+
+# Warna singkat
+NC='\e[0m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+BLUE='\033[1;34m'
+PURPLE='\033[0;35m'
+ORANGE='\033[0;33m'
+
+install_tools() {
+  bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
+}
+
+
+show_usage(){
+show_loading
+display_header
+echo -e "\n\n ${CYAN}║${GREEN}Usage:${NC} subff <domain> (contoh: subff netflix.com)${NC} \n\n"
+echo -e "
+${CYAN}║${NC} [ ${GREEN}Usage${NC} ] ${BLUE}Silakan ketik command berikut: ${CYAN}║${NC}
+subff vidio.com
+subff triadz.web.id
+"
+}
+
+show_loading() {
+  echo -ne "${ORANGE}Memuat"
+  for i in {1..5}; do
+    echo -n "."
+    sleep 0.1
+  done
+  echo -e "${NC}"
+}
+
+display_header() {
+  echo -e "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║${GREEN}          █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          │ MAGELANG ⚡ PHREAKER │                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                ${CYAN}║${NC}"
+  echo -e "${CYAN}╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${CYAN}║${NC} 📅 Tanggal: $(date '+%A, %d %B %Y')                      ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC} ⏰ Waktu: $(date '+%H:%M:%S')                              ${CYAN}║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
+  sleep 2
+}
+
+#ip=$(nslookup -timeout=5 -type=a "$sub" 2>/dev/null | grep 'Address: ' | head -n 1 | awk '{print $2}')
+#ip=$(nslookup -timeout=5 -type=a "$sub" 2>/dev/null | grep 'Address: ' | head -n 1 | awk '{print $2; exit}')
+#ip=$(nslookup -timeout=5 -type=A "$sub" 2>/dev/null | awk '/Address:/ {print $2; exit}')
+check_ip_status() {
+  local input_file=$1 output_sub=$2 output_ip=$3
+  echo "Memeriksa IP address dari subdomain yang ditemukan..."
+  while read -r sub; do
+    ip=$(nslookup -timeout=5 -type=a "$sub" 2>/dev/null | grep 'Address: ' | head -n 1 | awk '{print $2; exit}')
+    if [[ -n "$ip" ]]; then
+      echo "$sub" >> "$output_sub"
+      echo "$ip" >> "$output_ip"
+      printf "${BLUE}➤${NC} %s | %s ✓\n" "$sub" "$ip"
+    else
+      printf "${RED}🔻[SKIP]➤ %s${NC} ZONK!!🔻\n" "$sub"
+    fi
+  done < "$input_file"
+  echo -e "${PURPLE}Pengecekan selesai.${NC} Subdomain yang valid disimpan di $output_sub dan IP di $output_ip"
+}
+
+if ! command -v subfinder &> /dev/null; then install_tools; fi
+subff() {
+  local domain=$1
+  local subdomain="subdomains_${domain}.txt"
+  local valid_subdomains="valid_subdomains_${domain}.txt"
+  local valid_ips="valid_ips_${domain}.txt"
+  local folder_report="$HOME/report"
+  
+  mkdir -p "$folder_report"
+  rm -f "$folder_report"/*
+  if [[ -z "$domain" ]]; then
+        display_header
+        show_loading
+        show_usage
+        exit 1
+  fi
+
+  rm -f "$HOME/ips.txt" "$HOME/domains.txt" "$HOME/domain_utama.txt" "$HOME/"*.json >/dev/null 2>&1
+
+  display_header
+  show_loading
+
+  echo "Menjalankan Subfinder untuk domain: $domain..."
+  subfinder -d "$domain" -o "$subdomain"
+
+  if [[ -f "$subdomain" ]]; then
+    echo "Subdomain ditemukan. Memulai pengecekan IP..."
+    check_ip_status "$subdomain" "$valid_subdomains" "$valid_ips"
+    cp "$valid_subdomains" "$folder_report/"
+    cp "$valid_ips" "$folder_report/"
+    paste -d'|' "$valid_subdomains" "$valid_ips" > "$folder_report/sub_ip_${domain}.txt"
+    mv -f "$valid_subdomains" "domains.txt"
+    sort -u "$valid_ips" -o "ips.txt"
+    rm -f "$subdomain" "$valid_ips" >/dev/null 2>&1
+    cp -r "$folder_report" sub_${domain}
+  else
+    echo -e "${RED}Gagal menemukan subdomain. Periksa konfigurasi Subfinder.${NC}"
+  fi
+}
+subff "$@"
