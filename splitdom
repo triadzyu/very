@@ -1,0 +1,129 @@
+#!/bin/bash
+
+CLBlack="\e[0;30m";CLRed="\e[0;31m";CLGreen="\e[0;32m"
+CLYellow="\e[0;33m";CLBlue="\e[0;34m";CLPurple="\e[0;35m"
+CLCyan="\e[0;36m";CLWhite="\e[0;37m"
+
+BGBlack="\e[40m";BGRed="\e[41m";BGGreen="\e[42m"
+BGYellow="\e[43m";BGBlue="\e[44m";BGPurple="\e[45m"
+BGCyan="\e[46m";BGWhite="\e[47m"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT='\033[0;37m'
+NC='\e[0m'
+tyblue='\e[1;36m'
+
+INPUT_FILE="domains.txt"
+FOLDER_REPORT="${HOME}/report"
+
+OUTPUT_WILDCARD="$FOLDER_REPORT/domain_wildcard.txt"
+OUTPUT_UTAMA="$FOLDER_REPORT/domain_utama.txt"
+
+
+echo -e " Membuat folder log dan mengosongkan file hasil output"
+mkdir -p "$FOLDER_REPORT"
+> "$OUTPUT_UTAMA"
+> "$OUTPUT_WILDCARD"
+
+# Keyword untuk wildcard pengelompokan
+
+#4 suku kata
+#quiz.int.vidio.com
+#ava.game.naver.com
+
+#3 suku kata
+#zaintest.vuclip.com
+#cache.netflix.com
+#support.zoom.us
+
+#2 suku kata
+#zoomgov.com
+#ganecadigital.com
+
+
+KEYWORDS_WILDCARD1=("gopay" "vidio" "naver" "esaunggul" "seabank" "shopee")
+KEYWORDS_WILDCARD2=("blibli" "skul" "linefriends" "telkomuniversity" "instagram" "udemy" "midtrans" "zoom" "duolingo" "webex" "zaintest" "unnes" "untar" "quiz.vidio" "investor" "sociomile" "bakrie" "ruangguru" "quipper" "netflix")
+KEYWORDS_WILDCARD3=("swiftserve")
+KEYWORDS_WILDCARD4=("zoomgov" "ganecadigital" "freebooknotes" "indihomestudy")
+
+# Fungsi untuk memeriksa keyword di domain
+contains_keyword() {
+    local domain="$1"
+    shift
+    local keywords=("$@")
+    for keyword in "${keywords[@]}"; do
+        [[ "$domain" == *"$keyword"* ]] && return 0
+    done
+    return 1
+}
+
+# Fungsi untuk menentukan wildcard domain
+determine_wildcard() {
+    local domain="$1"
+    if contains_keyword "$domain" "${KEYWORDS_WILDCARD1[@]}"; then
+        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*'
+    elif contains_keyword "$domain" "${KEYWORDS_WILDCARD2[@]}"; then
+        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*'
+    elif contains_keyword "$domain" "${KEYWORDS_WILDCARD3[@]}"; then
+        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*'
+    elif contains_keyword "$domain" "${KEYWORDS_WILDCARD4[@]}"; then
+        echo "$domain" | grep -o '^[^.]*\.[^.]*'
+    else
+        echo ""
+    fi
+}
+
+# Proses Domain
+no=1
+total=$(wc -l < "$HOME/$INPUT_FILE")
+while IFS= read -r domain; do
+    domain=$(echo "$domain" | tr -d '[:space:]')  # Hilangkan spasi
+    [[ -z "$domain" ]] && continue               # Skip baris kosong
+
+    echo -e "\n$no./$total🔥domain target = $domain🔥"
+
+    # Tentukan Basedomain/Subdomain
+    if [[ "$domain" == *.my.id || "$domain" == *.biz.id || "$domain" == *.web.id ]]; then
+        basedomain=$(echo "$domain" | grep -o '[^.]*\.[^.]*\.[^.]*$')
+        subdomain=$(echo "$domain" | grep -o '[^.]*\.[^.]*\.[^.]*\.[^.]*$')
+    elif [[ "$domain" == *.com || "$domain" == *.site || "$domain" == *.me || "$domain" == *.cloud || "$domain" == *.fun || "$domain" == *.online || "$domain" == *.store || "$domain" == *.shop || "$domain" == *.top || "$domain" == *.tech || "$domain" == *.xyz ]]; then
+        basedomain=$(echo "$domain" | grep -o '[^.]*\.[^.]*$')
+        subdomain=$(echo "$domain" | grep -o '[^.]*\.[^.]*\.[^.]*$')
+    else
+        echo -e "❌ Other domain, please check: $domain"
+        sleep 3
+        continue
+    fi
+    
+    echo -e "⚡basedomain = $basedomain"
+    echo -e "⚡subdomain = $subdomain"
+    echo "$subdomain" >> "$OUTPUT_UTAMA"
+
+    # Tentukan wildcard (jika ada keyword)
+    wildcard=$(determine_wildcard "$domain")
+    if [[ -n "$wildcard" ]]; then
+        echo -e "⚡wildcard = $wildcard⚡"
+        echo "$wildcard" >> "$OUTPUT_WILDCARD"
+    fi
+
+    ((no++))
+done < "$HOME/$INPUT_FILE"
+rm "$HOME/$INPUT_FILE"
+# Hasil akhir
+echo "Selesai memisahkan domain."
+echo "Domain utama : $OUTPUT_UTAMA"
+echo "Wildcard domain : $OUTPUT_WILDCARD"
+
+#$HOME/Log_Scan/domain_wildcard.txt
+
+#sort -u "$HOME/Log_Scan/domain_utama.txt" > "$HOME/domain_utama.txt"
+sort -u "$OUTPUT_UTAMA" -o "$OUTPUT_UTAMA"
+sort -u "$OUTPUT_WILDCARD" -o "$OUTPUT_WILDCARD"
+
+#exit 0
+cp -f "$FOLDER_REPORT/domain_utama.txt" $HOME/domain_utama.txt
