@@ -54,7 +54,7 @@ local input_file=$1
 local folder_report="$HOME/report"
 
 mkdir -p "$folder_report"
-if [[ -z "$domain" ]]; then
+if [[ -z "$input_file" ]]; then
     display_header
     show_loading
     show_usage
