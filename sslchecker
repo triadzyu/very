@@ -1,0 +1,116 @@
+#!/bin/bash
+clear
+
+# Warna singkat
+NC='\e[0m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+BLUE='\033[1;34m'
+PURPLE='\033[0;35m'
+ORANGE='\033[0;33m'
+
+
+install_tools() {
+  bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
+}
+
+if ! command -v cekssl &> /dev/null; then install_tools; fi
+
+show_usage(){
+show_loading
+display_header
+echo -e "\n\n ${CYAN}║${GREEN}Usage:${NC} subff <domain> (contoh: subff netflix.com)${NC} \n\n"
+echo -e "
+${CYAN}║${NC} [ ${GREEN}Usage${NC} ] ${BLUE}Silakan ketik command berikut: ${CYAN}║${NC}
+sslchecker <namafiletarget>
+sslchecker domain_utama.txt
+"
+}
+
+show_loading() {
+  echo -ne "${ORANGE}Memuat"
+  for i in {1..5}; do
+    echo -n "."
+    sleep 0.1
+  done
+  echo -e "${NC}"
+}
+
+display_header() {
+  echo -e "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║${GREEN}          █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          │ DOMAIN SSL ⚡ CHECKER │                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                ${CYAN}║${NC}"
+  echo -e "${CYAN}╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${CYAN}║${NC} 📅 Tanggal: $(date '+%A, %d %B %Y')                      ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC} ⏰ Waktu: $(date '+%H:%M:%S')                              ${CYAN}║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
+  sleep 2
+}
+
+newdomstarget(){
+local input_file=$1
+local folder_report="$HOME/report"
+
+mkdir -p "$folder_report"
+if [[ -z "$domain" ]]; then
+    display_header
+    show_loading
+    show_usage
+    exit 1
+fi
+
+echo -e "${PURPLE} Run ssl checker for file: $input_file \n"
+display_header
+show_loading
+
+newcount=0
+nomer=1
+
+totaldom=$(wc -l < $input_file)
+
+echo -e "====== -=[ !dr]=- ===========" >> $HOME/report/log_ssl.txt
+echo -e "Domain Lama | DOMAIN BARU" >> $HOME/report/log_ssl.txt
+echo -e "======domain_aktif.txt===========" >> $HOME/report/log_ssl.txt
+
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    if [[ "$line" == *.my.id ]] || [[ "$line" == *.biz.id ]] || [[ "$line" == *.web.id ]]; then
+        basedomain=$(echo "$line" | grep -o '[^.]*\.[^.]*\.[^.]*$')
+    elif [[ "$line" == *.com ]] || [[ "$line" == *.site ]] || [[ "$line" == *.me ]] || [[ "$line" == *.cloud ]] || \
+         [[ "$line" == *.fun ]] || [[ "$line" == *.online ]] || [[ "$line" == *.store ]] || [[ "$line" == *.shop ]] || \
+         [[ "$line" == *.top ]] || [[ "$line" == *.tech ]] || [[ "$line" == *.xyz ]]; then
+        basedomain=$(echo "$line" | grep -o '[^.]*\.[^.]*$')
+    else
+        basedomain="$line"
+    fi
+    domainlama=$(echo "$line")
+    domainbaru=$(cekssl "$domainlama")
+    echo -e "\n${ORANGE} Cek SSL cert${GREEN} $nomer/${totaldom}. $line ${NC}\n"
+    if [[ -n $domainbaru ]]; then
+        printf "\n${RED}Sertifikat SSL ${ORANGE} $line ${GREEN} ditemukan \n${NC} "
+        if [[ $domainbaru != "$domainlama" ]] && [[ $domainbaru != "$basedomain" ]] && [[ $domainbaru != "CloudFlare" ]] && [[ $domainbaru != "*.cloudwaysapps.com" ]]; then
+            echo "$domainbaru" >> ${folder_report}/domain_baru.txt
+            echo "$domainlama | $domainbaru" >> ${folder_report}/log_ssl.txt
+            ssl_output=$(cat ${folder_report}/log_ssl.txt)
+            printf "\n${CYAN} HASIL Output: \n${BLUE}${ssl_output} "
+            ((newcount++))
+        fi
+    else
+        printf "\n${NC}❌Sertifikat SSL🔻 ${ORANGE} $line ${RED}tidak ditemukan \n${NC} "
+    fi
+((nomer++))
+done < $input_file
+#rm $input_file
+echo -e "\n${ORANGE} Jumlah domain baru = $newcount\n"
+if [[ -s ${folder_report}/domain_baru.txt ]]; then
+    echo -e "${PURPLE}Pengecekan selesai.${NC} \nData domain baru disimpan di ${folder_report}/domain_baru.txt dan Log di ${folder_report}/log_ssl.txt"
+else
+    printf "${RED}🔻[Ga Ada New Domain]➤ %s${NC} ZONK!!🔻\n" "$input_file"
+    rm ${folder_report}/domain_baru.txt
+    rm ${folder_report}/log_ssl.txt
+fi
+}
+
+newdomstarget "$@"
