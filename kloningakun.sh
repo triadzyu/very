@@ -1,9 +1,10 @@
 #!/bin/bash
+
+cd /data/data/com.termux/files/home/
+
 if [ ! -d "$HOME/reedem" ]; then
 git clone https://github.com/kejuashuejia/reedem
 fi
-
-cd /data/data/com.termux/files/home/
 
 copy_akun() {
     local source_dir="$1"
