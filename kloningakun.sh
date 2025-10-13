@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ -d "$HOME/reedem" ]; then
+if [ ! -d "$HOME/reedem" ]; then
 git clone https://github.com/kejuashuejia/reedem
 fi
 
