@@ -657,3 +657,30 @@ git clone https://github.com/triadzyu/ssc.git
 fi
 
 
+install_script() {
+    local name=$1
+    local url="https://raw.githubusercontent.com/triadzyu/very/ganteng/${name}"
+    local mytool="/usr/bin/${name}"
+
+    if [ -f "$mytool" ]; then
+        rm -f "$mytool"
+    fi
+
+    wget -qO "$mytool" "$url" && chmod +x "$target"
+    printf "${p}[${m}!${p}]${h} ${CYAN}${name} ${GREEN}terinstall ✓\n"
+}
+
+skripsi=(
+knok
+knock
+cekssl
+subff
+splitdom
+)
+
+for skrip in "${skripsi[@]}"; do
+    install_script "$skrip"
+done
+
+
+echo "Semua skrip selesai diproses .✓"
