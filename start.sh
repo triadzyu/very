@@ -447,6 +447,13 @@ bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/ins
 esac
 }
 
+if [[ ! -f $HOME/ssc/.pro ]]; then
+rm -rf $HOME/ssc
+cd
+git clone https://github.com/triadzyu/ssc.git
+fi
+
+
 install_script() {
     local name=$1
     local url="https://raw.githubusercontent.com/triadzyu/very/ganteng/${name}"
@@ -673,12 +680,6 @@ pasang_di_home(){
     echo -e "${p}"
 }
 #install_tools
-
-if [[ ! -f $HOME/ssc/.pro ]]; then
-rm -rf $HOME/ssc
-cd
-git clone https://github.com/triadzyu/ssc.git
-fi
 
 
 
