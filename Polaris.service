@@ -1,0 +1,13 @@
+[Unit]
+Description=SCRIPT BY NEWBIE V2
+After=network.target
+
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/usr/bin/ctrl
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
