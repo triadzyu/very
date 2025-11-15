@@ -82,7 +82,7 @@ install_go_advance() {
     
     echo -e "[*] Mengunduh Go 1.24.0 untuk${YELLOW} ${ARCH}...${p}"
     log INFO "Mengunduh: $FILE"
-    if ! wget -q "$URL" -O "${FILE}"; then
+    if ! wget -q "$GO_URL" -O "${FILE}"; then
         log WARN "Download gagal, mencoba mirror..."
 
         MIRROR="https://golang.google.cn/dl/${FILE}"
@@ -164,4 +164,8 @@ main() {
     echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
 }
 main
+
+
+
+
 
