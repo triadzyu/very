@@ -44,8 +44,51 @@ ensure_path() {
     export PATH="$PATH:$p1"
 }
 
-install_go_advance() {
+install_go() {
     apt install golang -y
+    ensure_path
+    log OK "Go berhasil terinstal: $(go version)"
+    go clean -modcache
+}
+
+install_go_advance() {
+    #echo "[*] Menghapus instalasi Go lama..."
+    #rm -rf $HOME/go && tar -C $HOME -xzf go1.24.0.linux-arm64.tar.gz
+    #rm -rf go1* $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
+    #latest="go1.24.0"
+    latest="$(curl -s https://go.dev/VERSION?m=text | head -1)"
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64)  ARCH="amd64" ;;
+        aarch64) ARCH="arm64" ;;
+        armv7l)  ARCH="armv6l" ;; # fallback untuk arm32
+        *) log ERROR "Unknown Arsitektur : $ARCH"; return 1 ;;
+    esac
+    if [[ -z "$ARCH" ]]; then
+        log ERROR "Tidak bisa mengambil versi terbaru Go"
+        return 1
+    else
+        echo -e "[*] Mendeteksi arsitektur:${YELLOW} $ARCH ${p}"
+    fi
+    
+    FILE="${latest}.linux-${ARCH}.tar.gz"
+    GO_URL="https://go.dev/dl/${FILE}"
+    
+    echo -e "[*] Mengunduh Go $latest untuk${YELLOW} ${ARCH}...${p}"
+    log INFO "Mengunduh: $FILE"
+    if ! wget "$GO_URL" -O "${FILE}"; then
+        log WARN "Download gagal, mencoba mirror..."
+
+        MIRROR="https://golang.google.cn/dl/${FILE}"
+        wget -q "$MIRROR" -O "${FILE}" || {
+            log ERROR "Mirror juga gagal. Instalasi dihentikan."
+            return 1
+        }
+    fi
+
+    log INFO "Ekstrak Go ke $HOME..."
+    rm -rf $HOME/go
+    tar -C $HOME -xzf "$HOME/${FILE}"
     ensure_path
     log OK "Go berhasil terinstal: $(go version)"
     go clean -modcache
@@ -100,87 +143,122 @@ if ! grep -q 'menu=' "$HOME/.bashrc"; then
 fi
 }
 
-main() {
-    log INFO "Memulai instalasi Go (Advance Mode)"
-    if ! command -v "go" >/dev/null 2>&1; then
-        echo -e "[*] ${YELLOW}memasang Go...${p}"
-        sleep 2
-        install_go_advance
+cek_go_version() {
+    if command -v go >/dev/null 2>&1; then
+        CURRENT_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+        if [[ "$CURRENT_VERSION" == "1.24.0" ]]; then
+            return 0  # versi cocok
+        else
+            return 1  # versi tidak cocok
+        fi
     else
-        local path
-        path=$(command -v "go")
+        return 1  # belum terinstal
+    fi
+}
+
+
+install_alat() {
+    local name=$1
+    local module="$2"
+    local tool_path="$(command -v ${name} 2>/dev/null)"
+    local folderbin="$(dirname "$tool_path")"
+
+    log INFO "Memeriksa: $name"
+    if [ -n "$tool_path" ]; then
+        echo "[✓] Tools ${name} terinstal di $folderbin"
+        chmod +x ${tool_path}
+    else
+        echo "[✗] ${name} tidak ditemukan"
+        log WARN "$name tidak ditemukan → instalasi dimulai..."
+        if [[ "$name" =~ ^subfinder ]]; then
+            echo "[*] Menginstal subfinder..."
+            if ! go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+        if [[ "$name" =~ ^bugscanner ]]; then
+            echo "[*] Menginstal bugscanner-go..."
+            if ! install -v github.com/Toton-dhibar/bugscanner-go@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+        if [[ "$name" =~ ^bugscanx ]]; then
+            echo "[*] Menginstal bugscanx-go..."
+            if ! install -v github.com/ayanrajpoot10/bugscanx-go@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+        if [[ "$name" =~ ^nuclei ]]; then
+            echo "[*] Menginstal nuclei..."
+            if ! install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+    fi
+    log OK "Semua tools selesai dipasang & diverifikasi!"
+}
+
+main() {
+mytools=(
+subfinder
+bugscanner-go
+bugscanx-go
+nuclei
+)
+    local path
+    path=$(command -v "go")
+    chmod +x "$path" 2>/dev/null
+    log INFO "Check and install Go (Advance Mode)"
+
+    if ! command -v "go" >/dev/null 2>&1; then
+        echo -e "[*] ${YELLOW} Belum terinstall Go...${p}"
+        sleep 2
+        log INFO "Memulai instalasi Go (Advance Mode)"
+        sleep 2
+        install_go
+    else
         log OK "path: $path"
-        chmod +x "$path" 2>/dev/null
         echo -e "[✓] ${CYAN}Golang sudah terpasang..${p}"
+        LATEST_VERSION=$(curl -s https://go.dev/VERSION?m=text | head -1 | sed 's/go//')
+        CURRENT_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+        if [[ "$CURRENT_VERSION" == "$LATEST_VERSION" ]]; then
+            echo -e "[✓] ${CYAN} Versi Go sudah up to date..${p}"
+        else
+            echo -e "[✓] ${CYAN} Tersedia Versi Go yang lebih tinggi..${p}"
+            echo -e "[✓] ${CYAN} CURRENT_VERSION = $CURRENT_VERSION..${p}"
+            echo -e "[✓] ${CYAN}  LATEST_VERSION = $LATEST_VERSION..${p}"
+            read -p "Apakah Anda yakin ingin update ke versi terbaru ? (y/n): " CONFIRM
+            if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
+                install_go_advance
+            else
+                echo -e "[✓] ${CYAN} Melanjutkan Versi Go yang sekarang..${p}"
+            fi
+        fi
         return 0
     fi
     
     install_profile
-    log OK "Instalasi Triadz Advance selesai!"
-    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
-}
-main}
+    
+    mkdir -p $HOME/go
+    mkdir -p $HOME/go/bin
 
-install_profile() {
-termuxprofil=$(cat <<'EOF'
-# ==== Triadz Ganteng Profile ====
-export EDITOR=nano
-alias ll='ls -la --color=auto'
-alias cls='clear'
+    echo -e "# 5️⃣ ${YELLOW}Instal semua tools${p}"
+    sleep 1
 
-if [ -t 1 ]; then
-    clear
-    echo -e "
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        Powered by Triadz Magelang
-            ==> ketik: menu
-                  😁👍
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    "
-    source ~/.bashrc
-fi
-# =============================
-EOF
-)
+    for mytool in "${mytools[@]}"; do
+        install_alat "$mytool" 
+    done
 
-# Pasang profiling termux
-if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
-    echo "$termuxprofil" >> "$HOME/.bash_profile"
-    log OK "Profil Termux ditambahkan"
-    source "$HOME/.bash_profile"
-fi
-
-termuxbashrc=$(cat <<'EOF'
-alias menu='echo -e "
-# =============================
-List command:
-# =============================
-subfinder
-bugscanx-go
-bugscanner-go
-nuclei
-# =============================
-"'
-EOF
-)
-# Pasang bashrc termux
-if ! grep -q 'menu=' "$HOME/.bashrc"; then
-    echo "$termuxbashrc" >> "$HOME/.bashrc"
-    log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
-fi
-}
-
-main() {
-    log INFO "Memulai instalasi Go (Advance Mode)"
-    #latest=$(curl -s https://go.dev/VERSION?m=text | head -1)
-    if cek_go_version; then
-        echo -e "[✓] ${CYAN}Go versi 1.24.0 sudah terpasang. Melewati instalasi ulang...${p}"
-    else
-        echo -e "[*] Go belum sesuai, ${YELLOW}memasang Go 1.24.0...${p}"
-        sleep 2
-        install_go_advance
-    fi
-    install_profile
+    echo "[✓] Semua tools telah terinstal "
+    
     log OK "Instalasi Triadz Advance selesai!"
     echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
 }
