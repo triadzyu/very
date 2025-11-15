@@ -100,7 +100,7 @@ install_go_tool() {
     if command -v "$name" >/dev/null 2>&1; then
         local path
         path=$(command -v "$name")
-        log OK "$name sudah ada di: $path"
+        log OK "path: $path"
         chmod +x "$path" 2>/dev/null
         return 0
     fi
@@ -154,6 +154,7 @@ fix_all_conflicts() {
     fix_tool_conflict subfinder
     fix_tool_conflict bugscanner-go
     fix_tool_conflict bugscanx-go
+    fix_tool_conflict nuclei
 }
 
 
@@ -174,22 +175,14 @@ echo -e "
     install_go_tool "subfinder"     "github.com/projectdiscovery/subfinder/v2/cmd/subfinder"
     install_go_tool "bugscanner-go" "github.com/Toton-dhibar/bugscanner-go"
     install_go_tool "bugscanx-go"   "github.com/ayanrajpoot10/bugscanx-go"
-
+    install_go_tool "nuclei"        "github.com/projectdiscovery/nuclei/v3/cmd/nuclei"
+    
     fix_all_conflicts
 
     log OK "Semua tools selesai dipasang & diverifikasi!"
 }
 
-# ======================================
-#  MAIN RUNNER
-# ======================================
-
-install_go_advance
-install_all_tools_advance
-
-log OK "Instalasi Triadz Advance selesai!"
-echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}"
-
+install_profile() {
 termuxprofil=$(cat <<'EOF'
 # ==== Triadz Ganteng Profile ====
 export EDITOR=nano
@@ -217,6 +210,7 @@ if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
     log OK "Profil Termux ditambahkan"
     source "$HOME/.bash_profile"
 fi
+
 termuxbashrc=$(cat <<'EOF'
 alias menu='echo -e "
 # =============================
@@ -225,12 +219,27 @@ List command:
 subfinder
 bugscanx-go
 bugscanner-go
+nuclei
 # =============================
 "'
 EOF
 )
-
+# Pasang bashrc termux
 if ! grep -q 'menu=' "$HOME/.bashrc"; then
     echo "$termuxbashrc" >> "$HOME/.bashrc"
     log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
 fi
+}
+# ======================================
+#  MAIN RUNNER
+# ======================================
+
+install_go_advance
+install_all_tools_advance
+install_profile
+
+log OK "Instalasi Triadz Advance selesai!"
+echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+
+
+
