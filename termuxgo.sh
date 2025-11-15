@@ -44,62 +44,82 @@ ensure_path() {
     export PATH="$PATH:$p1"
 }
 
-# ======================================
-#  ADVANCE GO INSTALLER
-# ======================================
-# Fungsi cek versi Go
-cek_go_version() {
-    if command -v go >/dev/null 2>&1; then
-        CURRENT_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
-        if [[ "$CURRENT_VERSION" == "1.24.0" ]]; then
-            return 0  # versi cocok
-        else
-            return 1  # versi tidak cocok
-        fi
-    else
-        return 1  # belum terinstal
-    fi
-}
-
 install_go_advance() {
-    echo "[*] Menghapus instalasi Go lama..."
-    rm -rf go1* $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
-    latest="go1.24.0"
-    ARCH=$(uname -m)
-    case "$ARCH" in
-        x86_64)  ARCH="amd64" ;;
-        aarch64) ARCH="arm64" ;;
-        armv7l)  ARCH="armv6l" ;; # fallback untuk arm32
-        *) log ERROR "Unknown Arsitektur : $ARCH"; return 1 ;;
-    esac
-    if [[ -z "$ARCH" ]]; then
-        log ERROR "Tidak bisa mengambil versi terbaru Go"
-        return 1
-    else
-        echo -e "[*] Mendeteksi arsitektur:${YELLOW} $ARCH ${p}"
-    fi
-    FILE="${latest}.linux-${ARCH}.tar.gz"
-    GO_URL="https://go.dev/dl/${FILE}"
-    
-    echo -e "[*] Mengunduh Go 1.24.0 untuk${YELLOW} ${ARCH}...${p}"
-    log INFO "Mengunduh: $FILE"
-    if ! wget -q "$GO_URL" -O "${FILE}"; then
-        log WARN "Download gagal, mencoba mirror..."
-
-        MIRROR="https://golang.google.cn/dl/${FILE}"
-        wget -q "$MIRROR" -O "${FILE}" || {
-            log ERROR "Mirror juga gagal. Instalasi dihentikan."
-            return 1
-        }
-    fi
-
-    log INFO "Ekstrak Go ke $HOME..."
-    rm -rf $HOME/go
-    tar -C $HOME -xzf "$HOME/${FILE}"
+    apt install golang -y
     ensure_path
     log OK "Go berhasil terinstal: $(go version)"
     go clean -modcache
 }
+
+install_profile() {
+termuxprofil=$(cat <<'EOF'
+# ==== Triadz Ganteng Profile ====
+export EDITOR=nano
+alias ll='ls -la --color=auto'
+alias cls='clear'
+
+if [ -t 1 ]; then
+    clear
+    echo -e "
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Powered by Triadz Magelang
+            ==> ketik: menu
+                  😁👍
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    "
+    source ~/.bashrc
+fi
+# =============================
+EOF
+)
+
+# Pasang profiling termux
+if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
+    echo "$termuxprofil" >> "$HOME/.bash_profile"
+    log OK "Profil Termux ditambahkan"
+    source "$HOME/.bash_profile"
+fi
+
+termuxbashrc=$(cat <<'EOF'
+alias menu='echo -e "
+# =============================
+List command:
+# =============================
+subfinder
+bugscanx-go
+bugscanner-go
+nuclei
+# =============================
+"'
+EOF
+)
+# Pasang bashrc termux
+if ! grep -q 'menu=' "$HOME/.bashrc"; then
+    echo "$termuxbashrc" >> "$HOME/.bashrc"
+    log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
+fi
+}
+
+main() {
+    log INFO "Memulai instalasi Go (Advance Mode)"
+    if ! command -v "go" >/dev/null 2>&1; then
+        echo -e "[*] ${YELLOW}memasang Go...${p}"
+        sleep 2
+        install_go_advance
+    else
+        local path
+        path=$(command -v "go")
+        log OK "path: $path"
+        chmod +x "$path" 2>/dev/null
+        echo -e "[✓] ${CYAN}Golang sudah terpasang..${p}"
+        return 0
+    fi
+    
+    install_profile
+    log OK "Instalasi Triadz Advance selesai!"
+    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+}
+main}
 
 install_profile() {
 termuxprofil=$(cat <<'EOF'
