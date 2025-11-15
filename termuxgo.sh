@@ -61,7 +61,10 @@ cek_go_version() {
     fi
 }
 
-deteksi_arch() {
+install_go_advance() {
+    echo "[*] Menghapus instalasi Go lama..."
+    rm -rf go1* $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
+    latest="go1.24.0"
     ARCH=$(uname -m)
     case "$ARCH" in
         x86_64)  ARCH="amd64" ;;
@@ -69,15 +72,13 @@ deteksi_arch() {
         armv7l)  ARCH="armv6l" ;; # fallback untuk arm32
         *) log ERROR "Unknown Arsitektur : $ARCH"; return 1 ;;
     esac
-}
-
-install_go_advance() {
-    echo "[*] Menghapus instalasi Go lama..."
-    rm -rf $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
-    latest="go1.24.0"
-    ARCH=$(deteksi_arch)
+    if [[ -z "$ARCH" ]]; then
+        log ERROR "Tidak bisa mengambil versi terbaru Go"
+        return 1
+    else
+        echo -e "[*] Mendeteksi arsitektur:${YELLOW} $ARCH ${p}"
+    fi
     FILE="${latest}.linux-${ARCH}.tar.gz"
-    echo -e "[*] Mendeteksi arsitektur:${YELLOW} $ARCH ${p}"
     GO_URL="https://go.dev/dl/${FILE}"
     
     echo -e "[*] Mengunduh Go 1.24.0 untuk${YELLOW} ${ARCH}...${p}"
@@ -164,8 +165,3 @@ main() {
     echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
 }
 main
-
-
-
-
-
