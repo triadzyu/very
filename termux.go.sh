@@ -45,10 +45,7 @@ ensure_path() {
 install_go_advance() {
     echo -e "${YELLOW}=== 🚀 Auto-Fix Go Environment & Install Tools ===${p}"
     sleep 1
-    #echo "[*] Menghapus instalasi Go lama..."
-    #rm -rf $HOME/go && tar -C $HOME -xzf go1.24.0.linux-arm64.tar.gz
-    #rm -rf go1* $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
-    #latest="go1.24.0"
+
     latest="$(curl -s https://go.dev/VERSION?m=text | head -1)"
     ARCH=$(uname -m)
     case "$ARCH" in
@@ -124,14 +121,11 @@ List command:
 subfinder
 bugscanx-go
 bugscanner-go
-nuclei
-katana
-httpx
 # =============================
 
 Silakan ketik command berikut:
 domain="whatsapp.com"
-nuclei -target https://$domain
+
 
 subfinder -d $domain -o $domain.txt
 
@@ -145,9 +139,7 @@ bugscanx-go ping -f $domain.txt --threads 15 -o ping.$domain.txt
 bugscanx-go proxy -f $domain.txt --target $domain
 bugscanx-go cdn-ssl --proxy-filename cfx.$domain.txt --target $domain
 
-katana -u https://$domain
-httpx -u $domain -sc
-cat domains | httpx | katana
+
 # =============================
 "'
 EOF
@@ -184,7 +176,7 @@ install_alat() {
         echo -e "[✓] Tools ${name} sudah terinstal \n[+] Lokasi $folderbin"
         chmod +x ${tool_path}
     else
-        echo "[✗] ${name} tidak ditemukan"
+        echo "[✗]${RED} ${name} tidak ditemukan"
         log WARN "$name tidak ditemukan → instalasi dimulai..."
         if [[ "$name" =~ ^subfinder ]]; then
             echo "[*] Menginstal subfinder..."
@@ -210,30 +202,6 @@ install_alat() {
                 return 1
             fi
         fi
-        if [[ "$name" =~ ^nuclei ]]; then
-            echo "[*] Menginstal nuclei..."
-            if ! go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest 2>$HOME/${name}_err.log; then
-                log ERROR "Instalasi gagal untuk $name"
-                log ERROR "$(cat $HOME/${name}_err.log)"
-                return 1
-            fi
-        fi
-        if [[ "$name" =~ ^katana ]]; then
-            echo "[*] Menginstal katana..."
-            if ! go install -v github.com/projectdiscovery/katana/cmd/katana@latest 2>$HOME/${name}_err.log; then
-                log ERROR "Instalasi gagal untuk $name"
-                log ERROR "$(cat $HOME/${name}_err.log)"
-                return 1
-            fi
-        fi
-        if [[ "$name" =~ ^httpx ]]; then
-            echo "[*] Menginstal httpx*..."
-            if ! go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest 2>$HOME/${name}_err.log; then
-                log ERROR "Instalasi gagal untuk $name"
-                log ERROR "$(cat $HOME/${name}_err.log)"
-                return 1
-            fi
-        fi
         
     fi
 }
@@ -242,9 +210,6 @@ mytools=(
 subfinder
 bugscanner-go
 bugscanx-go
-nuclei
-katana
-httpx
 )
 
 finishing() {
@@ -310,4 +275,3 @@ main() {
     fi
 }
 main
-
