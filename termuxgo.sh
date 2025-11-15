@@ -63,7 +63,7 @@ echo -e "
     esac
 
     # Ambil versi terbaru
-    latest=$(curl -s https://go.dev/VERSION?m=text)
+    latest=$(curl -s https://go.dev/VERSION?m=text | head -1)
     if [[ -z "$latest" ]]; then
         log ERROR "Tidak bisa mengambil versi terbaru Go"
         return 1
@@ -100,6 +100,157 @@ echo -e "
 # ======================================
 "
     local name="$1"
+    local module="$2"
+
+    log INFO "Memeriksa: $name"
+
+    if command -v "$name" >/dev/null 2>&1; then
+        local path
+        path=$(command -v "$name")
+        log OK "$name sudah ada di: $path"
+        chmod +x "$path" 2>/dev/null
+        return 0
+    fi
+
+    log WARN "$name tidak ditemukan → instalasi dimulai..."
+
+    if ! go install -v "$module"@latest 2>$PREFIX/tmp/${name}_err.log; then
+        log ERROR "Instalasi gagal untuk $name"
+        log ERROR "$(cat $PREFIX/tmp/${name}_err.log)"
+        return 1
+    fi
+
+    # Pastikan binary dapat dipanggil
+    if ! command -v "$name" >/dev/null 2>&1; then
+        if [[ -f "$HOME/go/bin/$name" ]]; then
+            cp -f "$HOME/go/bin/$name" /usr/bin/
+            log OK "$name ditempatkan di /usr/bin/"
+        else
+            log ERROR "Binary $name tidak ditemukan setelah instalasi"
+            return 1
+        fi
+    fi
+
+    log OK "$name berhasil terinstal!"
+}
+
+
+# ======================================
+#  FIX CONFLICT BINARY /usr/bin vs go/bin
+# ======================================
+fix_tool_conflict() {
+    local name="$1"
+
+    if [[ -f "/usr/bin/$name" && -f "$HOME/go/bin/$name" ]]; then
+        log WARN "Duplikasi binary terdeteksi: $name"
+
+        t1=$(stat -c %Y "/usr/bin/$name")
+        t2=$(stat -c %Y "$HOME/go/bin/$name")
+
+        if (( t2 > t1 )); then
+            cp -f "$HOME/go/bin/$name" /usr/bin/
+            log OK "Versi terbaru disalin ke /usr/bin/"
+        else
+            cp -f "/usr/bin/$name" "$HOME/go/bin/"
+            log OK "Sinkronisasi versi lama → go/bin"
+        fi
+    fi
+}
+
+fix_all_conflicts() {
+    fix_tool_conflict subfinder
+    fix_tool_conflict bugscanner-go
+    fix_tool_conflict bugscanx-go
+}
+
+
+# ======================================
+#  INSTALL ALL TOOLS
+# ======================================
+install_all_tools_advance() {
+    ensure_path
+
+    log INFO "Memulai instalasi semua tools Go…"
+
+    install_go_tool "subfinder"     "github.com/projectdiscovery/subfinder/v2/cmd/subfinder"
+    install_go_tool "bugscanner-go" "github.com/Toton-dhibar/bugscanner-go"
+    install_go_tool "bugscanx-go"   "github.com/ayanrajpoot10/bugscanx-go"
+
+    fix_all_conflicts
+
+    log OK "Semua tools selesai dipasang & diverifikasi!"
+}
+
+
+
+# ======================================
+#  MAIN RUNNER
+# ======================================
+
+install_go_advance
+install_all_tools_advance
+
+log OK "Instalasi Triadz Advance selesai!"
+echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}"
+
+    termuxprofil="
+    # ==== Triadz Termux Profile ====
+    export EDITOR=nano
+    alias ll='ls -la --color=auto'
+    alias cls='clear'
+    cls
+    echo -e '
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Powered by Triadz Magelang
+            ==> ketik: menu
+                  😁👍
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    '
+    source .bashrc
+    "
+termuxprofil=$(cat <<'EOF'
+# ==== Triadz Ganteng Profile ====
+export EDITOR=nano
+alias ll='ls -la --color=auto'
+alias cls='clear'
+
+if [ -t 1 ]; then
+    clear
+    echo -e "
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Powered by Triadz Magelang
+            ==> ketik: menu
+                  😁👍
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    "
+    source .bashrc
+fi
+# =============================
+EOF
+)
+    if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
+        echo -e "$termuxprofil" >> $HOME/.bash_profile
+        echo "[✓] Profil Triadz telah ditambahkan ke ~/.bash_profile"
+        source $HOME/.bash_profile
+    fi
+    
+    go clean -modcache
+
+termuxbashrc=$(cat <<'EOF'
+alias menu='echo -e "
+# =============================
+List command:
+# =============================
+subfinder
+bugscanx-go
+bugscanner-go
+# =============================
+"'
+EOF
+)
+    if ! grep -q 'menu' "$HOME/.bashrc"; then
+        echo -e "$termuxbashrc" >> $HOME/.bashrc
+    fi    local name="$1"
     local module="$2"
 
     log INFO "Memeriksa: $name"
