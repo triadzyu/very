@@ -158,7 +158,7 @@ install_alat() {
 
     log INFO "Memeriksa: $name"
     if [ -n "$tool_path" ]; then
-        echo "[✓] Tools ${name} terinstal di $folderbin"
+        echo -e "[✓] Tools ${name} sudah terinstal \n[+] Lokasi $folderbin"
         chmod +x ${tool_path}
     else
         echo "[✗] ${name} tidak ditemukan"
@@ -268,4 +268,3 @@ main() {
     fi
 }
 main
-
