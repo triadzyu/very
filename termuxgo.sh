@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-
+p="\033[39;1m"
+m="\033[31;1m"
+CYAN='\033[0;36m'
+YELLOW="\033[1;33m"
 echo -e "
 # ======================================
 #   ADVANCE VPS GO ENV & TOOL INSTALLER
@@ -27,11 +30,8 @@ log() {
 
 echo -e "${YELLOW}=== 🚀 Triadz Advance Installer ===${RESET}"
 sleep 1
-
-
-# ======================================
-#  ADD PATH ENTRIES SAFELY
-# ======================================
+echo -e "${YELLOW}=== 🚀 Auto-Fix Go Environment & Install Tools ===${p}"
+sleep 1
 
 ensure_path() {
     local p1="$HOME/go/bin"
@@ -44,32 +44,43 @@ ensure_path() {
     export PATH="$PATH:$p1"
 }
 
-
 # ======================================
 #  ADVANCE GO INSTALLER
 # ======================================
+# Fungsi cek versi Go
+cek_go_version() {
+    if command -v go >/dev/null 2>&1; then
+        CURRENT_VERSION=$(go version | awk '{print $3}' | sed 's/go//')
+        if [[ "$CURRENT_VERSION" == "1.24.0" ]]; then
+            return 0  # versi cocok
+        else
+            return 1  # versi tidak cocok
+        fi
+    else
+        return 1  # belum terinstal
+    fi
+}
 
-install_go_advance() {
-    log INFO "Memulai instalasi Go (Advance Mode)"
-
-    # Arsitektur
+deteksi_arch() {
     ARCH=$(uname -m)
     case "$ARCH" in
         x86_64)  ARCH="amd64" ;;
         aarch64) ARCH="arm64" ;;
-        *) log ERROR "Arsitektur tidak didukung: $ARCH"; return 1 ;;
+        armv7l)  ARCH="armv6l" ;; # fallback untuk arm32
+        *) log ERROR "Unknown Arsitektur : $ARCH"; return 1 ;;
     esac
+}
 
-    # Ambil versi terbaru
-    latest=$(curl -s https://go.dev/VERSION?m=text | head -1)
-    if [[ -z "$latest" ]]; then
-        log ERROR "Tidak bisa mengambil versi terbaru Go"
-        return 1
-    fi
-
+install_go_advance() {
+    echo "[*] Menghapus instalasi Go lama..."
+    rm -rf $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
+    latest="go1.24.0"
+    ARCH=$(deteksi_arch)
     FILE="${latest}.linux-${ARCH}.tar.gz"
-    URL="https://go.dev/dl/${FILE}"
-
+    echo -e "[*] Mendeteksi arsitektur:${YELLOW} $ARCH ${p}"
+    GO_URL="https://go.dev/dl/${FILE}"
+    
+    echo -e "[*] Mengunduh Go 1.24.0 untuk${YELLOW} ${ARCH}...${p}"
     log INFO "Mengunduh: $FILE"
     if ! wget -q "$URL" -O "${FILE}"; then
         log WARN "Download gagal, mencoba mirror..."
@@ -83,11 +94,74 @@ install_go_advance() {
 
     log INFO "Ekstrak Go ke $HOME..."
     rm -rf $HOME/go
-    mkdir -p $HOME/go
     tar -C $HOME -xzf "$HOME/${FILE}"
-
     ensure_path
-
     log OK "Go berhasil terinstal: $(go version)"
+    go clean -modcache
 }
-install_go_advance
+
+install_profile() {
+termuxprofil=$(cat <<'EOF'
+# ==== Triadz Ganteng Profile ====
+export EDITOR=nano
+alias ll='ls -la --color=auto'
+alias cls='clear'
+
+if [ -t 1 ]; then
+    clear
+    echo -e "
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Powered by Triadz Magelang
+            ==> ketik: menu
+                  😁👍
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    "
+    source ~/.bashrc
+fi
+# =============================
+EOF
+)
+
+# Pasang profiling termux
+if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
+    echo "$termuxprofil" >> "$HOME/.bash_profile"
+    log OK "Profil Termux ditambahkan"
+    source "$HOME/.bash_profile"
+fi
+
+termuxbashrc=$(cat <<'EOF'
+alias menu='echo -e "
+# =============================
+List command:
+# =============================
+subfinder
+bugscanx-go
+bugscanner-go
+nuclei
+# =============================
+"'
+EOF
+)
+# Pasang bashrc termux
+if ! grep -q 'menu=' "$HOME/.bashrc"; then
+    echo "$termuxbashrc" >> "$HOME/.bashrc"
+    log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
+fi
+}
+
+main() {
+    log INFO "Memulai instalasi Go (Advance Mode)"
+    #latest=$(curl -s https://go.dev/VERSION?m=text | head -1)
+    if cek_go_version; then
+        echo -e "[✓] ${CYAN}Go versi 1.24.0 sudah terpasang. Melewati instalasi ulang...${p}"
+    else
+        echo -e "[*] Go belum sesuai, ${YELLOW}memasang Go 1.24.0...${p}"
+        sleep 2
+        install_go_advance
+    fi
+    install_profile
+    log OK "Instalasi Triadz Advance selesai!"
+    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+}
+main
+
