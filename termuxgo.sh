@@ -29,12 +29,11 @@ echo -e "${YELLOW}=== 🚀 Triadz Advance Installer ===${RESET}"
 sleep 1
 
 
-ensure_path() {
-echo -e "
 # ======================================
 #  ADD PATH ENTRIES SAFELY
 # ======================================
-"
+
+ensure_path() {
     local p1="$HOME/go/bin"
 
     if ! grep -q "$p1" ~/.bashrc; then
@@ -46,12 +45,11 @@ echo -e "
 }
 
 
-install_go_advance() {
-echo -e "
 # ======================================
 #  ADVANCE GO INSTALLER
 # ======================================
-"
+
+install_go_advance() {
     log INFO "Memulai instalasi Go (Advance Mode)"
 
     # Arsitektur
@@ -73,11 +71,11 @@ echo -e "
     URL="https://go.dev/dl/${FILE}"
 
     log INFO "Mengunduh: $FILE"
-    if ! wget -q "$URL" -O "$PREFIX/tmp/${FILE}"; then
+    if ! wget -q "$URL" -O "${FILE}"; then
         log WARN "Download gagal, mencoba mirror..."
 
         MIRROR="https://golang.google.cn/dl/${FILE}"
-        wget -q "$MIRROR" -O "$PREFIX/tmp/${FILE}" || {
+        wget -q "$MIRROR" -O "${FILE}" || {
             log ERROR "Mirror juga gagal. Instalasi dihentikan."
             return 1
         }
@@ -85,20 +83,15 @@ echo -e "
 
     log INFO "Ekstrak Go ke $HOME..."
     rm -rf $HOME/go
-    tar -C $HOME -xzf "$PREFIX/tmp/${FILE}"
+    mkdir -p $HOME/go
+    tar -C $HOME -xzf "$HOME/${FILE}"
 
     ensure_path
 
     log OK "Go berhasil terinstal: $(go version)"
 }
 
-
 install_go_tool() {
-echo -e "
-# ======================================
-#  UNIVERSAL GO TOOL INSTALLER
-# ======================================
-"
     local name="$1"
     local module="$2"
 
@@ -114,9 +107,9 @@ echo -e "
 
     log WARN "$name tidak ditemukan → instalasi dimulai..."
 
-    if ! go install -v "$module"@latest 2>$PREFIX/tmp/${name}_err.log; then
+    if ! go install -v "$module"@latest 2>$HOME/${name}_err.log; then
         log ERROR "Instalasi gagal untuk $name"
-        log ERROR "$(cat $PREFIX/tmp/${name}_err.log)"
+        log ERROR "$(cat $HOME/${name}_err.log)"
         return 1
     fi
 
@@ -172,6 +165,12 @@ install_all_tools_advance() {
 
     log INFO "Memulai instalasi semua tools Go…"
 
+echo -e "
+# ======================================
+#  UNIVERSAL GO TOOL INSTALLER
+# ======================================
+"
+
     install_go_tool "subfinder"     "github.com/projectdiscovery/subfinder/v2/cmd/subfinder"
     install_go_tool "bugscanner-go" "github.com/Toton-dhibar/bugscanner-go"
     install_go_tool "bugscanx-go"   "github.com/ayanrajpoot10/bugscanx-go"
@@ -180,8 +179,6 @@ install_all_tools_advance() {
 
     log OK "Semua tools selesai dipasang & diverifikasi!"
 }
-
-
 
 # ======================================
 #  MAIN RUNNER
@@ -235,6 +232,5 @@ EOF
 
 if ! grep -q 'menu=' "$HOME/.bashrc"; then
     echo "$termuxbashrc" >> "$HOME/.bashrc"
-    log OK "Alias menu ditambahkan"
+    log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
 fi
-
