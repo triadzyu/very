@@ -30,8 +30,6 @@ log() {
 
 echo -e "${YELLOW}=== 🚀 Triadz Advance Installer ===${RESET}"
 sleep 1
-echo -e "${YELLOW}=== 🚀 Auto-Fix Go Environment & Install Tools ===${p}"
-sleep 1
 
 ensure_path() {
     local p1="$HOME/go/bin"
@@ -45,6 +43,8 @@ ensure_path() {
 }
 
 install_go_advance() {
+    echo -e "${YELLOW}=== 🚀 Auto-Fix Go Environment & Install Tools ===${p}"
+    sleep 1
     #echo "[*] Menghapus instalasi Go lama..."
     #rm -rf $HOME/go && tar -C $HOME -xzf go1.24.0.linux-arm64.tar.gz
     #rm -rf go1* $PREFIX/lib/go* $PREFIX/bin/go $PREFIX/share/go 2>/dev/null || true
@@ -173,7 +173,7 @@ install_alat() {
         fi
         if [[ "$name" =~ ^bugscanner ]]; then
             echo "[*] Menginstal bugscanner-go..."
-            if ! install -v github.com/Toton-dhibar/bugscanner-go@latest 2>$HOME/${name}_err.log; then
+            if ! go install -v github.com/Toton-dhibar/bugscanner-go@latest 2>$HOME/${name}_err.log; then
                 log ERROR "Instalasi gagal untuk $name"
                 log ERROR "$(cat $HOME/${name}_err.log)"
                 return 1
@@ -181,7 +181,7 @@ install_alat() {
         fi
         if [[ "$name" =~ ^bugscanx ]]; then
             echo "[*] Menginstal bugscanx-go..."
-            if ! install -v github.com/ayanrajpoot10/bugscanx-go@latest 2>$HOME/${name}_err.log; then
+            if ! go install -v github.com/ayanrajpoot10/bugscanx-go@latest 2>$HOME/${name}_err.log; then
                 log ERROR "Instalasi gagal untuk $name"
                 log ERROR "$(cat $HOME/${name}_err.log)"
                 return 1
@@ -189,14 +189,13 @@ install_alat() {
         fi
         if [[ "$name" =~ ^nuclei ]]; then
             echo "[*] Menginstal nuclei..."
-            if ! install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest 2>$HOME/${name}_err.log; then
+            if ! go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest 2>$HOME/${name}_err.log; then
                 log ERROR "Instalasi gagal untuk $name"
                 log ERROR "$(cat $HOME/${name}_err.log)"
                 return 1
             fi
         fi
     fi
-    log OK "Semua tools selesai dipasang & diverifikasi!"
 }
 
 mytools=(
@@ -220,9 +219,10 @@ finishing() {
     done
 
     echo "[✓] Semua tools telah terinstal "
+    log OK "Semua tools selesai dipasang & diverifikasi!"
     
     log OK "Instalasi Triadz Advance selesai!"
-    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go, nuclei ${RESET}\n menu"
 }
 
 install_go() {
