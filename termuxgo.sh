@@ -125,6 +125,29 @@ subfinder
 bugscanx-go
 bugscanner-go
 nuclei
+katana
+httpx
+# =============================
+
+Silakan ketik command berikut:
+domain="whatsapp.com"
+nuclei -target https://$domain
+
+subfinder -d $domain -o $domain.txt
+
+bugscanner-go scan direct -f $domain.txt -o cf.$domain.txt
+bugscanner-go scan sni -f $domain.txt --threads 16 --timeout 8 --deep 3
+bugscanner-go scan cdn-ssl --proxy-filename cf.$domain.txt --target $domain
+
+bugscanx-go direct -f $domain.txt -o cfx.$domain.txt
+bugscanx-go sni -f $domain.txt --threads 16 --timeout 8 --deep 3
+bugscanx-go ping -f $domain.txt --threads 15 -o ping.$domain.txt
+bugscanx-go proxy -f $domain.txt --target $domain
+bugscanx-go cdn-ssl --proxy-filename cfx.$domain.txt --target $domain
+
+katana -u https://$domain
+httpx -u $domain -sc
+cat domains | httpx | katana
 # =============================
 "'
 EOF
@@ -195,6 +218,23 @@ install_alat() {
                 return 1
             fi
         fi
+        if [[ "$name" =~ ^katana ]]; then
+            echo "[*] Menginstal katana..."
+            if ! go install -v github.com/projectdiscovery/katana/cmd/katana@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+        if [[ "$name" =~ ^httpx ]]; then
+            echo "[*] Menginstal httpx*..."
+            if ! go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest 2>$HOME/${name}_err.log; then
+                log ERROR "Instalasi gagal untuk $name"
+                log ERROR "$(cat $HOME/${name}_err.log)"
+                return 1
+            fi
+        fi
+        
     fi
 }
 
@@ -203,6 +243,8 @@ subfinder
 bugscanner-go
 bugscanx-go
 nuclei
+katana
+httpx
 )
 
 finishing() {
@@ -268,3 +310,4 @@ main() {
     fi
 }
 main
+
