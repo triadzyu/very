@@ -25,7 +25,7 @@ log() {
     esac
 }
 
-echo -e "${YELLOW}=== 🚀 Triadz Advance Installer (Parallel Mode) ===${RESET}"
+echo -e "${YELLOW}=== 🚀 Triadz Advance Installer ===${RESET}"
 sleep 1
 
 
@@ -46,16 +46,6 @@ ensure_path() {
 
 
 # ======================================
-#  SAFE PATCH: FIX PERMISSION MODCACHE
-# ======================================
-fix_modcache() {
-    log INFO "Membersihkan modcache Go dengan cara aman..."
-    go clean -modcache 2>/dev/null
-    chmod -R u+w "$HOME/go/pkg/mod" 2>/dev/null
-}
-
-
-# ======================================
 #  ADVANCE GO INSTALLER
 # ======================================
 
@@ -70,6 +60,7 @@ install_go_advance() {
         *) log ERROR "Arsitektur tidak didukung: $ARCH"; return 1 ;;
     esac
 
+    # Ambil versi terbaru
     latest=$(curl -s https://go.dev/VERSION?m=text | head -1)
     if [[ -z "$latest" ]]; then
         log ERROR "Tidak bisa mengambil versi terbaru Go"
@@ -91,79 +82,49 @@ install_go_advance() {
     fi
 
     log INFO "Ekstrak Go ke $HOME..."
-    rm -rf "$HOME/go"
-    mkdir -p "$HOME/go"
-    tar -C "$HOME" -xzf "$HOME/${FILE}"
+    rm -rf $HOME/go
+    mkdir -p $HOME/go
+    tar -C $HOME -xzf "$HOME/${FILE}"
 
     ensure_path
 
     log OK "Go berhasil terinstal: $(go version)"
 }
 
+install_go_tool() {
+    local name="$1"
+    local module="$2"
 
-# ======================================
-#  PARALLEL UNIVERSAL GO TOOL INSTALLER
-# ======================================
-install_all_tools_advance() {
-    ensure_path
+    log INFO "Memeriksa: $name"
 
-    log INFO "Menjalankan instalasi PARALLEL semua tools Go…"
-    echo -e "
-# ======================================
-#   UNIVERSAL PARALLEL GO TOOL INSTALLER
-# ======================================
-"
+    if command -v "$name" >/dev/null 2>&1; then
+        local path
+        path=$(command -v "$name")
+        log OK "path: $path"
+        chmod +x "$path" 2>/dev/null
+        return 0
+    fi
 
-    tools=(
-        "subfinder|github.com/projectdiscovery/subfinder/v2/cmd/subfinder"
-        "bugscanner-go|github.com/Toton-dhibar/bugscanner-go"
-        "bugscanx-go|github.com/ayanrajpoot10/bugscanx-go"
-        "nuclei|github.com/projectdiscovery/nuclei/v3/cmd/nuclei"
-    )
+    log WARN "$name tidak ditemukan → instalasi dimulai..."
 
-    CPU=$(nproc 2>/dev/null || echo 4)
-    log INFO "Parallel build menggunakan $CPU worker"
+    if ! go install -v "$module"@latest 2>$HOME/${name}_err.log; then
+        log ERROR "Instalasi gagal untuk $name"
+        log ERROR "$(cat $HOME/${name}_err.log)"
+        return 1
+    fi
 
-    pids=()
+    # Pastikan binary dapat dipanggil
+    if ! command -v "$name" >/dev/null 2>&1; then
+        if [[ -f "$HOME/go/bin/$name" ]]; then
+            cp -f "$HOME/go/bin/$name" /usr/bin/
+            log OK "$name ditempatkan di /usr/bin/"
+        else
+            log ERROR "Binary $name tidak ditemukan setelah instalasi"
+            return 1
+        fi
+    fi
 
-    for entry in "${tools[@]}"; do
-        name="${entry%%|*}"
-        module="${entry##*|}"
-
-        (
-            log INFO "[Parallel] Instalasi: $name"
-
-            if command -v "$name" >/dev/null 2>&1; then
-                log OK "$name sudah terpasang → skip"
-                exit 0
-            fi
-
-            if ! go install -v "$module"@latest &> "$HOME/${name}_parallel.log"; then
-                log ERROR "Gagal install $name (lihat ~/{$name}_parallel.log)"
-                exit 1
-            fi
-
-            if [[ -f "$HOME/go/bin/$name" ]]; then
-                cp -f "$HOME/go/bin/$name" /usr/bin/ 2>/dev/null
-            fi
-
-            log OK "$name selesai dipasang!"
-        ) &
-
-        pids+=($!)
-
-        while (( $(jobs -rp | wc -l) >= CPU )); do
-            sleep 0.3
-        done
-    done
-
-    for pid in "${pids[@]}"; do
-        wait "$pid"
-    done
-
-    fix_all_conflicts
-
-    log OK "Semua tools selesai dipasang (Parallel Mode)!"
+    log OK "$name berhasil terinstal!"
 }
 
 
@@ -198,8 +159,29 @@ fix_all_conflicts() {
 
 
 # ======================================
-#  TERMUX PROFILE
+#  INSTALL ALL TOOLS
 # ======================================
+install_all_tools_advance() {
+    ensure_path
+
+    log INFO "Memulai instalasi semua tools Go…"
+
+echo -e "
+# ======================================
+#  UNIVERSAL GO TOOL INSTALLER
+# ======================================
+"
+
+    install_go_tool "subfinder"     "github.com/projectdiscovery/subfinder/v2/cmd/subfinder"
+    install_go_tool "bugscanner-go" "github.com/Toton-dhibar/bugscanner-go"
+    install_go_tool "bugscanx-go"   "github.com/ayanrajpoot10/bugscanx-go"
+    install_go_tool "nuclei"        "github.com/projectdiscovery/nuclei/v3/cmd/nuclei"
+    
+    fix_all_conflicts
+
+    log OK "Semua tools selesai dipasang & diverifikasi!"
+}
+
 install_profile() {
 termuxprofil=$(cat <<'EOF'
 # ==== Triadz Ganteng Profile ====
@@ -222,9 +204,11 @@ fi
 EOF
 )
 
+# Pasang profiling termux
 if ! grep -q 'Triadz' "$HOME/.bash_profile"; then
     echo "$termuxprofil" >> "$HOME/.bash_profile"
     log OK "Profil Termux ditambahkan"
+    source "$HOME/.bash_profile"
 fi
 
 termuxbashrc=$(cat <<'EOF'
@@ -240,22 +224,20 @@ nuclei
 "'
 EOF
 )
-
+# Pasang bashrc termux
 if ! grep -q 'menu=' "$HOME/.bashrc"; then
     echo "$termuxbashrc" >> "$HOME/.bashrc"
-    log OK "Alias menu ditambahkan, Silakan keluar & buka kembali Termux"
+    log OK "Alias menu ditambahkan, Silakan Keluar Termux lalu buka Kembali"
 fi
 }
-
-
 # ======================================
 #  MAIN RUNNER
 # ======================================
 
 install_go_advance
-fix_modcache
 install_all_tools_advance
 install_profile
 
-log OK "Instalasi Triadz Advance (Parallel Edition) selesai!"
-echo -e "${GREEN}Silakan jalankan: subfinder, bugscanner-go, bugscanx-go${RESET}\nmenu"
+log OK "Instalasi Triadz Advance selesai!"
+echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+
