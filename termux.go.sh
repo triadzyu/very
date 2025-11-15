@@ -229,7 +229,7 @@ finishing() {
     log OK "Semua tools selesai dipasang & diverifikasi!"
     
     log OK "Instalasi Triadz Advance selesai!"
-    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go, nuclei ${RESET}\n menu"
+    echo -e "${GREEN}Silakan jalankan tools: \n subfinder, bugscanner-go, bugscanx-go,${RESET}\n ====> menu"
 }
 
 install_go() {
@@ -275,3 +275,22 @@ main() {
     fi
 }
 main
+
+echo "[✓] Semua tools telah terinstal "
+
+
+
+echo -e "\n# 7️⃣ ${YELLOW}Tampilkan hasil${p}"
+sleep 1
+echo
+echo -e "=== ✅ Instalasi Selesai ===\n"
+echo "Versi Go : $(go version)"
+echo
+echo "Coba jalankan:"
+echo -e "try run: ${YELLOW}"
+echo "  bugscanner-go -h"
+echo "  bugscanx-go -h"
+echo "  subfinder -h"
+echo
+echo -e "${p}[✓] ${CYAN}Semua langkah selesai. Enjoy! 😎${p}"
+
