@@ -44,13 +44,6 @@ ensure_path() {
     export PATH="$PATH:$p1"
 }
 
-install_go() {
-    apt install golang -y
-    ensure_path
-    log OK "Go berhasil terinstal: $(go version)"
-    go clean -modcache
-}
-
 install_go_advance() {
     #echo "[*] Menghapus instalasi Go lama..."
     #rm -rf $HOME/go && tar -C $HOME -xzf go1.24.0.linux-arm64.tar.gz
@@ -206,13 +199,41 @@ install_alat() {
     log OK "Semua tools selesai dipasang & diverifikasi!"
 }
 
-main() {
 mytools=(
 subfinder
 bugscanner-go
 bugscanx-go
 nuclei
 )
+
+finishing() {
+    install_profile
+    
+    mkdir -p $HOME/go
+    mkdir -p $HOME/go/bin
+
+    echo -e "# 5️⃣ ${YELLOW}Instal semua tools${p}"
+    sleep 1
+
+    for mytool in "${mytools[@]}"; do
+        install_alat "$mytool" 
+    done
+
+    echo "[✓] Semua tools telah terinstal "
+    
+    log OK "Instalasi Triadz Advance selesai!"
+    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
+}
+
+install_go() {
+    apt install golang -y
+    ensure_path
+    log OK "Go berhasil terinstal: $(go version)"
+    go clean -modcache
+    finishing
+}
+
+main() {
     local path
     path=$(command -v "go")
     chmod +x "$path" 2>/dev/null
@@ -233,8 +254,8 @@ nuclei
             echo -e "[✓] ${CYAN} Versi Go sudah up to date..${p}"
         else
             echo -e "[✓] ${CYAN} Tersedia Versi Go yang lebih tinggi..${p}"
-            echo -e "[✓] ${CYAN} CURRENT_VERSION = $CURRENT_VERSION..${p}"
-            echo -e "[✓] ${CYAN}  LATEST_VERSION = $LATEST_VERSION..${p}"
+            echo -e "[✓] ${CYAN} CURRENT VERSION = $CURRENT_VERSION..${p}"
+            echo -e "[✓] ${CYAN} LATEST  VERSION = $LATEST_VERSION..${p}"
             read -p "Apakah Anda yakin ingin update ke versi terbaru ? (y/n): " CONFIRM
             if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
                 install_go_advance
@@ -242,24 +263,9 @@ nuclei
                 echo -e "[✓] ${CYAN} Melanjutkan Versi Go yang sekarang..${p}"
             fi
         fi
+        finishing
         return 0
     fi
-    
-    install_profile
-    
-    mkdir -p $HOME/go
-    mkdir -p $HOME/go/bin
-
-    echo -e "# 5️⃣ ${YELLOW}Instal semua tools${p}"
-    sleep 1
-
-    for mytool in "${mytools[@]}"; do
-        install_alat "$mytool" 
-    done
-
-    echo "[✓] Semua tools telah terinstal "
-    
-    log OK "Instalasi Triadz Advance selesai!"
-    echo -e "${GREEN}Silakan jalankan tools: subfinder, bugscanner-go, bugscanx-go${RESET}\n menu"
 }
 main
+
