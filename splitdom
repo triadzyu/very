@@ -158,8 +158,8 @@ sort -u "$OUTPUT_WILDCARD" -o "$OUTPUT_WILDCARD"
 #exit 0
 cp -f "$FOLDER_REPORT/domain_utama.txt" $HOME/domain_utama.txt
 
-
-cp -r "$FOLDER_REPORT" "${FOLDER_REPORT}/sub_${basedomain}"
+cd $HOME
+cp -r "$FOLDER_REPORT" "sub_${basedomain}"
 echo "✔️ Hasil selesai! Disimpan di ./report/sub_${basedomain}"
   
 # Hasil akhir
