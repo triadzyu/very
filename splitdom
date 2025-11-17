@@ -158,11 +158,20 @@ sort -u "$OUTPUT_WILDCARD" -o "$OUTPUT_WILDCARD"
 #exit 0
 cp -f "$FOLDER_REPORT/domain_utama.txt" $HOME/domain_utama.txt
 
+
+cp -r "$FOLDER_REPORT" "${FOLDER_REPORT}/sub_${basedomain}"
+echo "✔️ Hasil selesai! Disimpan di ./report/sub_${basedomain}"
+  
 # Hasil akhir
 echo -e "\n Selesai memisahkan domain."
-echo " input $INPUT_FILE & output $OUTPUT_FILE"
-echo -e "\n detail :"
-echo -e "Domain utama : ./report/domain_utama.txt"
-echo -e "Wildcard domain : ./report/domain_wildcard.txt\n"
+echo " input domains.txt & ips.txt"
+echo " output domain_utama.txt & domain_wildcard.txt"
 
+echo -e "\n detail :"
+echo -e "output : ./report/sub_${basedomain}/domain_utama.txt"
+echo -e "output : ./report/sub_${basedomain}/domain_wildcard.txt\n"
+echo -e "output : ./report/sub_${basedomain}/valid_sub_${basedomain}.txt"
+echo -e "output : ./report/sub_${basedomain}/valid_ip_${basedomain}.txt"
+  
 sleep 3
+
