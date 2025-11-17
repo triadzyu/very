@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Warna (pakai yang sering dipakai aja)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+tyblue='\e[1;36m'
+NC='\e[0m'
+b="\033[34;1m";m="\033[31;1m";h="\033[32;1m"
+p="\033[39;1m";c="\033[35;1m";u="\033[36;1m"
+k="\033[33;1m";n="\033[00m"
+
+install_tools() {
+  bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
+}
+
+if ! command -v subfinder &>/dev/null; then 
+    install_tools
+fi
+
+if ! command -v knockpy &>/dev/null; then 
+    bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/termux.knock.sh)"
+fi
+
+  if [[ -d "/data/data/com.termux/files/" ]]; then
+    f_bin="$PREFIX/bin"
+  else
+    f_bin="/usr/bin"
+  fi
+  
+  # update uncomment
+  # rm -rf ${f_bin}/splitdom
+  
+  instal_splitdom() {
+  repo="https://raw.githubusercontent.com/triadzyu/very/ganteng/splitdom"
+  wget -qO "${f_bin}/splitdom" "$repo"
+  chmod +x ${f_bin}/splitdom
+  }
+  if ! command -v splitdom; then
+    instal_splitdom
+  fi
+  
+show_loading() {
+  echo -ne "${ORANGE}Memuat..."
+  local i=0
+  while [ $i -lt 5 ]; do
+    echo -n "."
+    sleep 0.1
+    ((i++))
+  done
+  echo -e "${NC}"
+#clear
+}
+
+display_header() {
+#clear
+  echo -e "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          │ MAGELANG ⚡ PHREAKER │                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC}${GREEN}          █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                ${NC}${CYAN}║${NC}"
+  echo -e "${CYAN}╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${CYAN}║${NC} ${CYAN}📅 Tanggal: $(date '+%A, %d %B %Y')${NC}                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC} ${BLUE}⏰ Waktu: $(date '+%H:%M:%S')${NC}                               ${CYAN}║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
+}
+
+
+show_usage(){
+show_loading
+display_header
+echo -e "
+${CYAN}║${NC} [ ${GREEN}Usage${NC} ] ${BLUE}Silakan ketik command berikut: ${CYAN}║${NC}
+knok rmatstore.cloud
+knok vidio.com
+"
+}
+
+getsub() {
+    local basedomain="$1"
+    if [ -z "$basedomain" ]; then
+        show_usage
+        exit 1
+    fi
+    
+    mkdir -p $HOME/report
+    rm -rf $HOME/report/*
+    knockpy -d "$basedomain" --recon --bruteforce --save report
+    
+    cd
+    cd report
+    cat *.json | grep -oP '(?<="domain": ")[^"]*' > domains.txt
+    cat *.json | grep -oP '([0-9]{1,3}\.){3}[0-9]{1,3}' > ips.txt
+    paste -d'|' domains.txt ips.txt > domain_ip.txt
+
+    cat *.json | jq -r '.[] | select(.cert!= null and.cert!= null) |.cert' | sort -u | grep -oP '[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' > ssl_${basedomain}.txt
+
+    cat "$basedomain"*.json | grep -oP '(?<="domain": ")[^"]*' > sub_${basedomain}.txt
+    cat "$basedomain"*.json | grep -oP '([0-9]{1,3}\.){3}[0-9]{1,3}' > ip_${basedomain}.txt
+    paste -d'|' sub_${basedomain}.txt ip_${basedomain}.txt > sub_ip_${basedomain}.txt
+    cd
+    cp -vf domains.txt $HOME
+    cp -vf ips.txt $HOME
+}
+
+getsub "$@"
