@@ -1,5 +1,4 @@
 #!/bin/bash
-
 CLBlack="\e[0;30m";CLRed="\e[0;31m";CLGreen="\e[0;32m"
 CLYellow="\e[0;33m";CLBlue="\e[0;34m";CLPurple="\e[0;35m"
 CLCyan="\e[0;36m";CLWhite="\e[0;37m"
@@ -19,11 +18,12 @@ NC='\e[0m'
 tyblue='\e[1;36m'
 
 INPUT_FILE="domains.txt"
+OUTPUT_FILE="domain_utama.txt"
+
 FOLDER_REPORT="${HOME}/report"
 
 OUTPUT_WILDCARD="$FOLDER_REPORT/domain_wildcard.txt"
 OUTPUT_UTAMA="$FOLDER_REPORT/domain_utama.txt"
-
 
 echo -e " Membuat folder log dan mengosongkan file hasil output"
 mkdir -p "$FOLDER_REPORT"
@@ -32,24 +32,60 @@ mkdir -p "$FOLDER_REPORT"
 
 # Keyword untuk wildcard pengelompokan
 
-#4 suku kata
-#quiz.int.vidio.com
-#ava.game.naver.com
+#2 suku kata
+#zoomgov.com
+#ganecadigital.com
+KEYWORDS_WILDCARD1=(
+"zoomgov"
+"ganecadigital"
+"freebooknotes"
+"indihomestudy"
+)
 
 #3 suku kata
 #zaintest.vuclip.com
 #cache.netflix.com
 #support.zoom.us
+KEYWORDS_WILDCARD2=(
+"quiz.vidio.com"
+"blibli"
+"skul"
+"linefriends"
+"telkomuniversity"
+"instagram"
+"udemy"
+"midtrans"
+"zoom"
+"duolingo"
+"webex"
+"zaintest"
+"unnes"
+"untar"
+"quiz.vidio"
+"investor"
+"sociomile"
+"bakrie"
+"ruangguru"
+"quipper"
+"netflix"
+"tiktok"
+"grab"
+)
 
-#2 suku kata
-#zoomgov.com
-#ganecadigital.com
+#4 suku kata
+#quiz.int.vidio.com
+#ava.game.naver.com
+KEYWORDS_WILDCARD3=(
+"gopay"
+"vidio"
+"naver"
+"esaunggul"
+"seabank"
+"shopee"
+)
 
-
-KEYWORDS_WILDCARD1=("gopay" "vidio" "naver" "esaunggul" "seabank" "shopee")
-KEYWORDS_WILDCARD2=("blibli" "skul" "linefriends" "telkomuniversity" "instagram" "udemy" "midtrans" "zoom" "duolingo" "webex" "zaintest" "unnes" "untar" "quiz.vidio" "investor" "sociomile" "bakrie" "ruangguru" "quipper" "netflix")
-KEYWORDS_WILDCARD3=("swiftserve")
-KEYWORDS_WILDCARD4=("zoomgov" "ganecadigital" "freebooknotes" "indihomestudy")
+#anomali
+KEYWORDS_WILDCARD4=("swiftserve")
 
 # Fungsi untuk memeriksa keyword di domain
 contains_keyword() {
@@ -66,13 +102,13 @@ contains_keyword() {
 determine_wildcard() {
     local domain="$1"
     if contains_keyword "$domain" "${KEYWORDS_WILDCARD1[@]}"; then
-        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*'
+        echo "$domain" | grep -o '^[^.]*\.[^.]*'
     elif contains_keyword "$domain" "${KEYWORDS_WILDCARD2[@]}"; then
         echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*'
     elif contains_keyword "$domain" "${KEYWORDS_WILDCARD3[@]}"; then
-        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*'
+        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*'
     elif contains_keyword "$domain" "${KEYWORDS_WILDCARD4[@]}"; then
-        echo "$domain" | grep -o '^[^.]*\.[^.]*'
+        echo "$domain" | grep -o '^[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*'
     else
         echo ""
     fi
@@ -114,12 +150,6 @@ while IFS= read -r domain; do
     ((no++))
 done < "$HOME/$INPUT_FILE"
 rm "$HOME/$INPUT_FILE"
-# Hasil akhir
-echo "Selesai memisahkan domain."
-echo "Domain utama : $OUTPUT_UTAMA"
-echo "Wildcard domain : $OUTPUT_WILDCARD"
-
-#$HOME/Log_Scan/domain_wildcard.txt
 
 #sort -u "$HOME/Log_Scan/domain_utama.txt" > "$HOME/domain_utama.txt"
 sort -u "$OUTPUT_UTAMA" -o "$OUTPUT_UTAMA"
@@ -127,3 +157,12 @@ sort -u "$OUTPUT_WILDCARD" -o "$OUTPUT_WILDCARD"
 
 #exit 0
 cp -f "$FOLDER_REPORT/domain_utama.txt" $HOME/domain_utama.txt
+
+# Hasil akhir
+echo -e "\n Selesai memisahkan domain."
+echo " input $INPUT_FILE & output $OUTPUT_FILE"
+echo -e "\n detail :"
+echo -e "Domain utama : ./report/domain_utama.txt"
+echo -e "Wildcard domain : ./report/domain_wildcard.txt\n"
+
+sleep 3
