@@ -1,0 +1,218 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+# ───────────────────────────
+#   COLOR DEFINITIONS
+# ───────────────────────────
+NC='\e[0m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+BLUE='\033[1;34m'
+PURPLE='\033[0;35m'
+ORANGE='\033[0;33m'
+
+# ───────────────────────────
+#   INSTALL TOOL AUTO
+# ───────────────────────────
+install_tools() {
+  bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/start.sh)"
+}
+
+if ! command -v subfinder &>/dev/null; then 
+    install_tools
+fi
+
+  if [[ -d "/data/data/com.termux/files/" ]]; then
+    f_bin="$PREFIX/bin"
+  else
+    f_bin="/usr/bin"
+  fi
+  
+  # update uncomment
+  # rm -rf ${f_bin}/splitdom
+  
+  instal_splitdom() {
+  repo="https://raw.githubusercontent.com/triadzyu/very/ganteng/splitdom"
+  wget -qO "${f_bin}/splitdom" "$repo"
+  chmod +x ${f_bin}/splitdom
+  }
+  if ! command -v splitdom; then
+    instal_splitdom
+  fi
+
+# ───────────────────────────
+#   UI / DISPLAY
+# ───────────────────────────
+show_loading() {
+  echo -ne "${ORANGE}Memuat"
+  for i in {1..5}; do echo -n "."; sleep 0.1; done
+  echo -e "${NC}"
+}
+
+display_header() {
+  echo -e "${CYAN}╔══════════════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║${GREEN}          █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          │ MAGELANG ⚡ PHREAKER │                ${CYAN}║${NC}"
+  echo -e "${CYAN}║${GREEN}          █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█                ${CYAN}║${NC}"
+  echo -e "${CYAN}╠══════════════════════════════════════════════════╣${NC}"
+  echo -e "${CYAN}║${NC} 📅 Tanggal: $(date '+%A, %d %B %Y')                      ${CYAN}║${NC}"
+  echo -e "${CYAN}║${NC} ⏰ Waktu: $(date '+%H:%M:%S')                              ${CYAN}║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════════════╝${NC}"
+  sleep 1
+}
+
+show_usage() {
+  show_loading
+  display_header
+
+  echo -e "
+ ${CYAN}║${GREEN}Usage:${NC} subff <domain> (contoh: subff netflix.com)${NC}
+
+${CYAN}║${NC} [ ${GREEN}Example${NC} ] ${BLUE}Gunakan perintah berikut:${CYAN}║${NC}
+subff2 vidio.com
+subff2 triadz.web.id
+"
+}
+
+TARGET_RAW=${1:-}
+if [[ -z "$TARGET_RAW" ]]; then
+  show_usage
+  echo "Usage: $0 <domain>"
+  echo "Usage: $0 vidio.com"
+  echo "Usage: $0 triadz.web.id"
+  exit 1
+fi
+
+TARGET="${TARGET_RAW#http://}"
+TARGET="${TARGET#https://}"
+TARGET="${TARGET%%/*}"
+
+OUT_DIR="$PWD/sub_${TARGET}"
+mkdir -p "$OUT_DIR"
+TMP_ALL="$OUT_DIR/all_subs.txt"
+
+    tmp_sub="domains.txt"
+    tmp_ip="ips.txt"
+
+ONLY_SUBS="$OUT_DIR/domains.txt"
+ONLY_IPS="$OUT_DIR/ips.txt"
+
+FINAL_SUBS="$OUT_DIR/valid_subdomains.txt"
+FINAL_IPS="$OUT_DIR/valid_ips.txt"
+FINAL_JOIN="$OUT_DIR/sub_ip_${TARGET}.txt"
+
+# Safe mktemp for Termux & Linux
+safe_mktemp() {
+  local base="${TMPDIR:-$PREFIX/tmp}"
+  mkdir -p "$base"
+  mktemp "$base/tmp.XXXXXX"
+}
+
+COOKIE="cookie.txt"
+rm -f $COOKIE $tmp_sub $tmp_ip 2>/dev/null
+
+COOKIE="$(safe_mktemp)"
+#COOKIE="$(mktemp)"
+#COOKIE="cookie.txt"
+
+
+ua_list=("Mozilla/5.0 (Linux; Android 8.0)" "Mozilla/5.0 (Linux; Android 9)" "Mozilla/5.0 (Linux; Android 10)" "Mozilla/5.0 (Linux; Android 7.1.1; Moto G (5S) Plus) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.80 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 8.0.0; moto g(6) play Build/OPP27.61-14-4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 8.0.0; SM-G965F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 5.1.1; SM-J500M Build/LMY48B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 7.0; Moto C Build/NRD90M.062) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 6.0.1; LG-K220 Build/MXB48T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 5.0; SAMSUNG SM-N9005 Build/LRX21V) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/2.1 Chrome/34.0.1847.76 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 6.0.1; Moto G Play Build/MPIS24.241-15.3-26) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.111 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 6.0.1; SM-G532M Build/MMB29T; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/69.0.3497.100 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 7.0; SAMSUNG SM-J530G Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/7.2 Chrome/59.0.3071.125 Mobile Safari/537.36" "Mozilla/5.0 (Linux; Android 8.0.0; SM-G930F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.91 Mobile Safari/537.36")
+UA=${ua_list[$RANDOM % ${#ua_list[@]}]}
+
+#UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+#COOKIE="$(mktemp)"; TARGET=indo2.abrprem.com; fetch_to_stdout(){ local url="$1"; curl --connect-timeout 5 -m 10 -A "$UA" -sL "$url" -c "$COOKIE" -b "$COOKIE" || return 1; }; fetch_to_stdout "https://crt.sh/?q=$TARGET" | grep -Po '(?<=<TD>)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'; rm $COOKIE
+
+# quick function to fetch from an endpoint (no heavy retry to keep speed)
+fetch_to_stdout(){
+  local url="$1"
+  curl --connect-timeout 5 -m 10 -A "$UA" -sL "$url" -c "$COOKIE" -b "$COOKIE" || return 1
+}
+
+display_header
+# Collect subs from multiple sources (fast, no heavy parsing)
+echo "Collecting subdomains (parallel-ready) ..."
+
+fetch_to_stdout "https://crt.sh/?q=$TARGET" | grep -Po '(?<=<TD>)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+fetch_to_stdout "https://api.certspotter.com/v1/issuances?domain=$TARGET&include_subdomains=true&expand=dns_names" | grep -Po '(?<=\"dns_names\":\[\")[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+fetch_to_stdout "https://otx.alienvault.com/api/v1/indicators/domain/$TARGET/passive_dns" | grep -Po '(?<=\"hostname\": \")[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+fetch_to_stdout "https://api.hackertarget.com/hostsearch/?q=$TARGET" | grep -Po '[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+fetch_to_stdout "https://web.archive.org/cdx/search/cdx?url=*.$TARGET/*&output=txt&fl=original&collapse=urlkey" | grep -Po '(?<=https:\/\/)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+fetch_to_stdout "https://jonlu.ca/anubis/subdomains/$TARGET" | grep -Po '[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}' 2>/dev/null >> "$TMP_ALL" || true
+
+
+#sort -u "$TMP_ALL" > "$OUT_DIR/unix_subs.txt" || true
+sub=$(sort -u "$TMP_ALL" 2>/dev/null | grep -v "^$")
+if [[ -z "$sub" ]]; then
+    printf "\nSubdomain $TARGET Tidak ditemukan\n"
+    rm -f $TMP_ALL $COOKIE 2>/dev/null
+    exit 1
+fi
+# hapus cookie dan file sementara 
+rm -f "$TMP_ALL" "$COOKIE" 2>/dev/null
+echo "$sub" >> "$OUT_DIR/unix_subs.txt"
+echo -e "\nUnix subs collected: $(wc -l < "$OUT_DIR/unix_subs.txt") subdomains\n"
+
+# parallel resolver function (runs in xargs)
+resolver_worker(){
+    BLUE="\e[1;36m"
+    RED="\e[1;31m"
+    NC="\e[0m"
+    tmp_sub="domains.txt"
+    tmp_ip="ips.txt"
+    host="$1"
+    if command -v host &>/dev/null; then
+        ip=$(host -t A "$host" 2>/dev/null | awk '/has address/ {print $4; exit}')
+    else
+        #ip=$(nslookup -timeout=5 -type=a "$hosts" 2>/dev/null | grep 'Address: ' | head -n 1 | awk '{print $2}')
+        ip=$(nslookup -timeout=5 -type=A "$host" 2>/dev/null | awk '/Address:/ {print $2; exit}')
+    fi
+
+    if [[ -n "$ip" ]]; then
+        printf "${BLUE}➤ ${NC}OK: %s | %s\n" "$host" "$ip"
+        #printf "${BLUE}➤ ${NC}$host $ip\n"
+        echo "$host" >> "$tmp_sub"
+        echo "$ip" >> "$tmp_ip"
+        printf "%s\n%s\n" "$host" "$ip" >> "sub_ip.txt"
+        
+    else
+        #printf "${BLUE}➤ ${RED}$host ${NC}\n"
+        printf "${BLUE}➤ ${RED}SKIP🔻: %s\n" "$host"
+    fi
+}
+
+export -f resolver_worker
+
+# Run parallel (20 threads)
+#cat "$OUT_DIR/unix_subs.txt" | grep -v '^$' | xargs -P 20 -I {} bash -c 'resolver_worker "$@"' _ {}
+cat "$OUT_DIR/unix_subs.txt" | grep -v '^$' | xargs -P 8 -I {} bash -c 'resolver_worker "$@"' _ {}
+printf "${NC}=================================\n"
+
+printf "\nTotal Subdomain sorted : $(wc -l < "$tmp_sub") subdomain \n"
+
+result_sub=$(sort -u "$tmp_sub" 2>/dev/null | grep -v '^$')
+result_ip=$(sort -u "$tmp_ip" 2>/dev/null | grep -v '^$')
+
+# Aggregate results
+> "$FINAL_SUBS"
+> "$FINAL_IPS"
+
+echo "$result_sub" >> "$FINAL_SUBS"
+echo "$result_ip" >> "$FINAL_IPS"
+
+cp -f "$FINAL_SUBS" "$ONLY_SUBS"
+cp -f "$FINAL_IPS" "$ONLY_IPS"
+
+cp -f "$FINAL_SUBS" "$HOME/domains.txt"
+cp -f "$FINAL_IPS" "$HOME/ips.txt"
+
+# finalize unique pairs
+paste -d'|' "$FINAL_SUBS" "$FINAL_IPS" > "$FINAL_JOIN" || true
+
+mv sub_ip.txt $OUT_DIR/sub_ip.txt
+echo "Done. Results in $OUT_DIR"
+#echo "Sub+IP file: $FINAL_JOIN"
+
+#splitdom
+#bash -c "$(wget -qO- https://raw.githubusercontent.com/triadzyu/very/ganteng/splitdom)"
+
