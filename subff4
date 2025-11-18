@@ -7,6 +7,10 @@ if ! command -v subfinder &>/dev/null; then
     install_tools
 fi
 
+if ! command -v knockpy &>/dev/null; then 
+    install_tools
+fi
+
   if [[ -d "/data/data/com.termux/files/" ]]; then
     f_bin="$PREFIX/bin"
   else
