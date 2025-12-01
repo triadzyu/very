@@ -66,5 +66,5 @@ function cek_ssl() {
     #    return
     #fi
 }
-cek_dependencies
+
 cek_ssl $@
