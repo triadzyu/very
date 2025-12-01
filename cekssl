@@ -1,7 +1,70 @@
 #!/bin/bash
-cek_ssl() {
-local hosts=$1
-nmap -p 443 --script ssl-cert $hosts | grep Subject | awk '{print $4}' | grep 'commonName' | cut -d "=" -f2
+
+#cek_ssl() {
+#local hosts=$1
+#nmap -p 443 --script ssl-cert $hosts | grep Subject | awk '{print $4}' | grep 'commonName' | cut -d "=" -f2
+#}
+#cek_ssl "$@"
+
+NMAP_TIMEOUT=6
+OPENSSL_TIMEOUT=6
+require_cmd() {
+    local cmd="$1" pkg="$2"
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        apt install $pkg -y
+    fi
+}
+require_cmd openssl openssl
+require_cmd nmap nmap
+require_cmd timeout coreutils
+
+get_cn_nmap() {
+    local ip="$1"
+    # Try Nmap's ssl-cert script; keep small host-timeout
+    timeout ${NMAP_TIMEOUT}s nmap -p 443 --script ssl-cert $ip | grep Subject | awk '{print $4}' | grep 'commonName' | cut -d "=" -f2
 }
 
-cek_ssl "$@"
+get_cn_openssl() {
+    local ip="$1"
+    # Use -servername dummy to allow SNI handshake; some servers ignore dummy but many will return a cert
+    timeout ${OPENSSL_TIMEOUT}s openssl s_client -connect "${ip}:443" -servername dummy -showcerts < /dev/null 2>/dev/null | openssl x509 -noout -subject 2>/dev/null | sed -E 's/^subject=.*CN=([^/]+).*/\1/' | tr -d ' \t\r\n'
+}
+
+function cek_ssl() {
+    local ip=$1
+    local domain
+    if [[ -z "$ip" ]]; then
+        echo "WARNING: No targets were specified, so 0 hosts scanned."
+        echo "USAGE: $0 <IP>"
+        exit
+    fi
+    #domain=$(nmap -p 443 --script ssl-cert $ip | grep Subject | awk '{print $4}' | grep 'commonName' | cut -d "=" -f2)
+    domain=$(timeout ${NMAP_TIMEOUT}s nmap --host-timeout ${NMAP_TIMEOUT}s -p 443 --script ssl-cert "$ip" 2>/dev/null | tr -d '\r' | grep -E "Subject:|commonName=|CN=" | sed -nE 's/.*(CN|commonName)=([^ ,/]+).*/\2/p' | head -n 1 | tr -d ' \t\r\n')
+    #if [[ $? -eq 124 ]]; then
+    #    echo "[TIMEOUT] $ip -> Nmap timeout after ${NMAP_TIMEOUT} secon"
+    #fi
+    if [[ -z "$domain" ]]; then
+        openssl_cn=$(get_cn_openssl "$ip")
+        if [[ -n "$openssl_cn" ]]; then
+            domain="$openssl_cn"
+            #echo "[OPENSSL] $ip -> $domain"
+            echo "$domain"
+        else
+            nmap_cn=$(get_cn_nmap "$ip")
+            if [[ -n "$nmap_cn" ]]; then
+                domain="$nmap_cn"
+                #echo "[NMAP v2] $ip -> $domain"
+                echo "$domain"
+            fi
+        fi
+    else
+        #echo "[NMAP v1] $ip -> $domain"
+        echo "$domain"
+    fi
+    #if [[ -z "$domain" ]]; then
+    #    echo "[x] $ip -> tidak ada CN"
+    #    return
+    #fi
+}
+cek_dependencies
+cek_ssl $@
