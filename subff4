@@ -119,4 +119,5 @@ getsub() {
 getsub "$@"
 
 splitdom
-sslchecker ips.txt
+#sslchecker ips.txt
+sslchecker domain_utama.txt
