@@ -106,3 +106,7 @@ subff() {
   fi
 }
 subff "$@"
+
+splitdom
+#sslchecker ips.txt
+sslchecker domain_utama.txt
