@@ -25,6 +25,7 @@ echo -e "
 ${CYAN}║${NC} [ ${GREEN}Usage${NC} ] ${BLUE}Silakan ketik command berikut: ${CYAN}║${NC}
 sslchecker <namafiletarget>
 sslchecker domain_utama.txt
+sslchecker ips.txt
 "
 }
 
