@@ -99,9 +99,10 @@ getsub() {
     cat "$basedomain"*.json | grep -oP '(?<="domain": ")[^"]*' > sub_${basedomain}.txt
     cat "$basedomain"*.json | grep -oP '([0-9]{1,3}\.){3}[0-9]{1,3}' > ip_${basedomain}.txt
     paste -d'|' sub_${basedomain}.txt ip_${basedomain}.txt > sub_ip_${basedomain}.txt
-    cd
+    
     cp -vf domains.txt $HOME
-    cp -vf ips.txt $HOME
+    sort -u ips.txt -o $HOME/ips.txt
+    cd
 }
 
 getsub "$@"
