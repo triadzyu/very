@@ -121,4 +121,4 @@ getsub "$@"
 splitdom
 sslchecker domain_utama.txt
 sslchecker ips.txt
-sort -u $HOME/report/domain_baru.txt
+sort -u $HOME/report/domain_baru.txt -o $HOME/report/domain_baru.txt
