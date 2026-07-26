@@ -18,7 +18,7 @@ echo -e "
     # 📦 Installer UPX untuk Termux (Android)
     # Pasang ke $PREFIX/bin
 "
-
+#URL="https://raw.githubusercontent.com/YaddyKakkoii/stb/refs/heads/main/upx-5.2.0-amd64_linux.tar.xz"
 URL="https://release-assets.githubusercontent.com/github-production-release-asset/67031040/81265d49-8d8f-4e04-8f4c-574c0cfd5604?sp=r&sv=2018-11-09&sr=b&spr=https&se=2025-11-11T15%3A16%3A33Z&rscd=attachment%3B+filename%3Dupx-5.0.2-arm64_linux.tar.xz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2025-11-11T14%3A16%3A23Z&ske=2025-11-11T15%3A16%3A33Z&sks=b&skv=2018-11-09&sig=su3PXF%2F8SqHnwblac%2BabIsKkQ4PG56e9UTEgvSjnNkM%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc2Mjg3MTEwMiwibmJmIjoxNzYyODcwODAyLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.lABJkS4BCszWZ3-QO_AhGctL_dijxaliWA53RowBYr4&response-content-disposition=attachment%3B%20filename%3Dupx-5.0.2-arm64_linux.tar.xz&response-content-type=application%2Foctet-stream"
 if command -v upx >/dev/null 2>&1; then
   upx --version
@@ -41,7 +41,8 @@ upx
 }
 
 function instal_upx_vps() {
-URL="https://release-assets.githubusercontent.com/github-production-release-asset/67031040/33708fbd-e153-4f56-bd95-cbd5af137374?sp=r&sv=2018-11-09&sr=b&spr=https&se=2025-11-11T14%3A34%3A39Z&rscd=attachment%3B+filename%3Dupx-5.0.2-amd64_linux.tar.xz&rsct=application%2Foctet-stream"
+URL2="https://raw.githubusercontent.com/YaddyKakkoii/stb/refs/heads/main/upx-5.2.0-amd64_linux.tar.xz"
+URL="https://release-assets.githubusercontent.com/github-production-release-asset/67031040/3c226bd1-d53b-47be-a709-bbe432d00518?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-07-26T01%3A59%3A11Z&rscd=attachment%3B+filename%3Dupx-5.2.0-amd64_linux.tar.xz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-07-26T00%3A58%3A37Z&ske=2026-07-26T01%3A59%3A11Z&sks=b&skv=2018-11-09&sig=udfki8G2sJSGbpt5tyM9%2B8KSVlkMfHTgbTufTkNp%2B2g%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc4NTAyNzg1OCwibmJmIjoxNzg1MDI3NTU4LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.LHoevQKzchqV-UVznK2RKjPKa7ILz9BRaLekEzgE9Zc&response-content-disposition=attachment%3B%20filename%3Dupx-5.2.0-amd64_linux.tar.xz&response-content-type=application%2Foctet-stream"
 UPX_VERSION="${UPX_VERSION:-5.0.2}"
 ASSET="upx-5.0.2-amd64_linux.tar.xz"
 DEST="/usr/bin"
@@ -88,7 +89,24 @@ err(){ echo -e "\033[1;31m[ERR]\033[0m $*"; }
     tar -xf upx-5.0.2-amd64_linux.tar.xz
     if [[ ! -f upx-5.0.2-amd64_linux/upx ]]; then
         err "Binary UPX tidak ditemukan dalam arsip!"
+        sleep 2
+		
+		info "📦 RETRY Memasang ulang UPX v${UPX_VERSION} (arsitektur: ${ARCH}) di VPS..."
+    curl -L -o upx-5.0.2-amd64_linux.tar.xz "$URL2"
+    if [[ ! -f "upx-5.0.2-amd64_linux.tar.xz" ]]; then
+      err "❌ Gagal download upx via curl"
+      wget -O "upx-5.0.2-amd64_linux.tar.xz" "$URL2"
+    fi
+    if [[ ! -s "$ASSET" ]]; then
+        err "❌ Gagal mengunduh file UPX!"
+        exit 1
+    fi
+    tar -xf upx-5.0.2-amd64_linux.tar.xz
+	if [[ ! -f upx-5.0.2-amd64_linux/upx ]]; then
+        err "Binary UPX tidak ditemukan dalam arsip!"
         exit 2
+    fi
+	
     fi
     cp -vf upx-5.0.2-amd64_linux/upx /usr/bin/
     chmod +x /usr/bin/upx
