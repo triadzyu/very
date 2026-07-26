@@ -87,7 +87,7 @@ err(){ echo -e "\033[1;31m[ERR]\033[0m $*"; }
         exit 1
     fi
     tar -xf upx-5.0.2-amd64_linux.tar.xz
-    if [[ ! -f upx-5.0.2-amd64_linux/upx ]]; then
+    if [[ ! -f $HOME/upx-5.2.0-amd64_linux/upx ]]; then
         err "Binary UPX tidak ditemukan dalam arsip!"
         sleep 2
 		
@@ -102,13 +102,13 @@ err(){ echo -e "\033[1;31m[ERR]\033[0m $*"; }
         exit 1
     fi
     tar -xf upx-5.0.2-amd64_linux.tar.xz
-	if [[ ! -f upx-5.0.2-amd64_linux/upx ]]; then
+	if [[ ! -f $HOME/upx-5.2.0-amd64_linux/upx ]]; then
         err "Binary UPX tidak ditemukan dalam arsip!"
         exit 2
     fi
 	
     fi
-    cp -vf upx-5.0.2-amd64_linux/upx /usr/bin/
+    cp -vf $HOME/upx-5.2.0-amd64_linux/upx /usr/bin/
     chmod +x /usr/bin/upx
     ok "✅ UPX berhasil dipasang di $DEST  😁👍"
     sleep 2
