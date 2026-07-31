@@ -142,8 +142,8 @@ if [ ! -d "$PROJECT_KNOCK_DIR" ]; then
     pip install .
     cd
     if ! command -v knockpy &> /dev/null; then
-        apt install python3.12-venv
-        apt install python3-venv
+        apt install python3.12-venv -y
+        apt install python3-venv -y
         python3 -m venv $HOME/knock
         source $HOME/knock/bin/activate
         cd $HOME/knock
